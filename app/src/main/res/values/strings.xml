@@ -1,0 +1,71 @@
+<!--
+  ~ Copyright (C) 2022 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources>
+    <string name="app_name">Inventory</string>
+    <string name="attention">Attention</string>
+    <string name="back_button">Back</string>
+    <string name="delete">Delete</string>
+    <string name="delete_question">Are you sure you want to delete?</string>
+    <string name="no_item_description">No items in the inventory</string>
+    <string name="edit_item_title">Edit Item</string>
+    <string name="item">Item</string>
+    <string name="item_detail_title">Item Details</string>
+    <string name="item_entry_title">Add Item</string>
+    <string name="item_name_req">Item Name *</string>
+    <string name="item_price_req">Item Price *</string>
+    <string name="no">No</string>
+    <string name="price">Price</string>
+    <string name="quantity_in_stock">Quantity\nIn Stock</string>
+    <string name="quantity_req">Quantity in Stock *</string>
+    <string name="save_action">Save</string>
+    <string name="sell">Sell</string>
+    <string name="yes">Yes</string>
+    <string name="routine_title">Switch after a time</string>
+    <string name="add_timer_routine">Set a timer to turn device on/off</string>
+    <string name="edit_timer_routine_title">Edit Routine</string>
+    <string name="timer_routine_name_req">Routine Name*</string>
+    <string name="timer_routine_time_req">Period of time to set Set*</string>
+    <string name="status_req">Device Status*</string>
+    <string name="timer_routine_entry_title">Add routine after a period of time</string>
+    <string name="timer_routine_details_title">View Timer Routine</string>
+    <string name="edit_clock_routine_title">Edit Routine</string>
+    <string name="clock_routine_details_title">View Clock Routine</string>
+    <string name="clock_routine_entry_title">Add Clock Routine</string>
+    <string name="add_clock_routine">Set a time to turn on/off</string>
+    <string name="clock_routine_name_req">Routine Name *</string>
+    <string name="clock_routine_time_req">Time to turn device on/off*</string>
+    <string name="edit_multi_routine_title">Edit Routine</string>
+    <string name="multi_routine_details_title">View Multi Routine</string>
+    <string name="multi_routine_entry_title">Add Multi Routine</string>
+    <string name="add_multi_routine">Set a condition to turn on/off</string>
+    <string name="multi_routine_name_req">Routine Name *</string>
+    <string name="multi_routine_time_req">Condition to Set*</string>
+    <string name="edit_mix_routine_title">Edit Routine</string>
+    <string name="mix_routine_details_title">View Mix Routine</string>
+    <string name="mix_routine_entry_title">Add Mix Routine</string>
+    <string name="add_mix_routine">Set a mixed routine</string>
+    <string name="mix_routine_condition_req">Condition to Set*</string>
+    <string name="mix_routine_name_req">Routine Name *</string>
+    <string name="mix_routine_time_req">Time to Set*</string>
+    <string name="multi_device_name_req">Device Name *</string>
+
+
+
+
+
+
+
+</resources>

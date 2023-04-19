@@ -1,0 +1,90 @@
+{
+  "auth": {
+    "anothertestee506d5c": {
+      "customAuth": false,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "anothertestee506d5cCustomMessage",
+          "triggerProvider": "Cognito"
+        }
+      ],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL",
+          "NAME"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "function": {
+    "anothertestee506d5cCustomMessage": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_anothertestee506d5cCustomMessage_EMAILMESSAGE": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "anothertestee506d5cCustomMessage"
+        }
+      ]
+    },
+    "AMPLIFY_function_anothertestee506d5cCustomMessage_EMAILSUBJECT": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "anothertestee506d5cCustomMessage"
+        }
+      ]
+    },
+    "AMPLIFY_function_anothertestee506d5cCustomMessage_REDIRECTURL": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "anothertestee506d5cCustomMessage"
+        }
+      ]
+    },
+    "AMPLIFY_function_anothertestee506d5cCustomMessage_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "anothertestee506d5cCustomMessage"
+        }
+      ]
+    },
+    "AMPLIFY_function_anothertestee506d5cCustomMessage_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "anothertestee506d5cCustomMessage"
+        }
+      ]
+    }
+  }
+}
