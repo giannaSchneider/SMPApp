@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import android.content.Context
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
@@ -54,6 +55,10 @@ object MixRoutineEntryDestination : NavigationDestination {
     override val titleRes = R.string.mix_routine_entry_title
 }
 enum class ShowTimeInputOption {
+    SHOW,
+    HIDE
+}
+enum class ShowTimeInputOption2 {
     SHOW,
     HIDE
 }
@@ -142,241 +147,142 @@ fun MixRoutineInputForm(
     showClockInput: Boolean = false
 
 ) {
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        OutlinedTextField(
-            value = mixRoutineDetails.name,
-            onValueChange = { onMixRoutineValueChange(mixRoutineDetails.copy(name = it)) },
-            label = { Text(stringResource(R.string.mix_routine_name_req)) },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
-        Text(text = "Turn this device..:")
-//        OutlinedTextField(
-//            value = mixRoutineDetails.time,
-//            onValueChange = { onMixRoutineValueChange(mixRoutineDetails.copy(time = it)) },
-//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-//            label = { Text(stringResource(R.string.mix_routine_time_req)) },
-//            leadingIcon = { Text(Currency.getInstance(Locale.getDefault()).symbol) },
-//            modifier = Modifier.fillMaxWidth(),
-//            enabled = enabled,
-//            singleLine = true
-//        )
-
-        ///////////////////////////Status Selection//////////////////////////////////////////////////
-        val options = listOf("On", "Off")
-        var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember { mutableStateOf(options[0]) }
-
-//        OutlinedTextField(
-//            value = mixRoutineDetails.name2,
-//            onValueChange = { onMixRoutineValueChange(mixRoutineDetails.copy(name2 = it)) },
-//            label = { Text(stringResource(R.string.mix_routine_name_req)) },
-//            modifier = Modifier.fillMaxWidth(),
-//            enabled = enabled,
-//            singleLine = true
-//        )
-
-//    var expanded2 by remember { mutableStateOf(false) }
-//        //var selectedOptionText2 by remember { mutableStateOf(options[0]) }
-//        var items = itemsRepository.getAllItemsStream().collectAsState(emptyList())
-//        var options = items
-//        var selectedOptionText2 by remember { mutableStateOf(options[0]) }
-//
-//        ExposedDropdownMenuBox(
-//            expanded = expanded2,
-//            onExpandedChange = {
-//                expanded2 = !expanded2
-//            }
+    LazyColumn(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(32.dp)
+    ) {item{
+//        item(
+//            modifier = modifier.fillMaxWidth(),
+//            verticalArrangement = Arrangement.spacedBy(16.dp)
 //        ) {
-//            TextField(
-//                readOnly = true,
-//                value = selectedOptionText2,
-//                onValueChange = { },
-//                label = { Text("Select Device") },
-//                trailingIcon = {
-//                    ExposedDropdownMenuDefaults.TrailingIcon(
-//                        expanded = expanded2
-//                    )
-//                },
-//                colors = ExposedDropdownMenuDefaults.textFieldColors()
-//            )
-//            ExposedDropdownMenu(
-//                expanded = expanded2,
-//                onDismissRequest = {
-//                    expanded2 = false
-//                }
-//            ) {
-//                options.forEach { selectionOption ->
-//                    DropdownMenuItem(
-//                        onClick = {
-//                            selectedOptionText2 = selectionOption
-//                            expanded2 = false
-//                            onMixRoutineValueChange(mixRoutineDetails.copy(name2 = selectedOptionText2))
-//                        }
-//                    ){
-//                        Text(text = selectionOption)
-//                    }
-//                }
-//            }
-//        }
-
-
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
-        ) {
-            TextField(
-                readOnly = true,
-                value = selectedOptionText,
-                onValueChange = { },
-                label = { Text("Set Status") },
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(
-                        expanded = expanded
-                    )
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors()
+            OutlinedTextField(
+                value = mixRoutineDetails.name,
+                onValueChange = { onMixRoutineValueChange(mixRoutineDetails.copy(name = it)) },
+                label = { Text(stringResource(R.string.mix_routine_name_req)) },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = enabled,
+                singleLine = true
             )
-            ExposedDropdownMenu(
+            Text(text = "Turn this device..:")
+
+
+            ///////////////////////////Status Selection//////////////////////////////////////////////////
+            val options = listOf("On", "Off")
+            var expanded by remember { mutableStateOf(false) }
+            var selectedOptionText by remember { mutableStateOf(options[0]) }
+
+            ExposedDropdownMenuBox(
                 expanded = expanded,
-                onDismissRequest = {
-                    expanded = false
+                onExpandedChange = {
+                    expanded = !expanded
                 }
             ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        onClick = {
-                            selectedOptionText = selectionOption
-                            expanded = false
-                            onMixRoutineValueChange(mixRoutineDetails.copy(status = selectedOptionText))
+                TextField(
+                    readOnly = true,
+                    value = selectedOptionText,
+                    onValueChange = { },
+                    label = { Text("Set Status") },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = expanded
+                        )
+                    },
+                    colors = ExposedDropdownMenuDefaults.textFieldColors()
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    }
+                ) {
+                    options.forEach { selectionOption ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedOptionText = selectionOption
+                                expanded = false
+                                onMixRoutineValueChange(mixRoutineDetails.copy(status = selectedOptionText))
+                            }
+                        ) {
+                            Text(text = selectionOption)
                         }
-                    ) {
-                        Text(text = selectionOption)
                     }
                 }
             }
-        }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        var selectedOption by remember { mutableStateOf(ShowTimeInputOption.SHOW) }
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            var selectedOption by remember { mutableStateOf(ShowTimeInputOption.SHOW) }
 
-        //Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "Show Time Input")
+            //Column(modifier = Modifier.fillMaxWidth()) {
+            Text(text = "Show Time Input")
 
-        //Row(modifier = Modifier.padding(start = 8.dp)) {
-        RadioButton(
-            selected = selectedOption == ShowTimeInputOption.SHOW,
-            onClick = { selectedOption = ShowTimeInputOption.SHOW }
-        )
-        Text(text = "Show")
-
-        RadioButton(
-            selected = selectedOption == ShowTimeInputOption.HIDE,
-            onClick = { selectedOption = ShowTimeInputOption.HIDE }
-        )
-        Text(text = "Hide", modifier = Modifier.padding(start = 16.dp))
-        //}
-
-        if (selectedOption == ShowTimeInputOption.SHOW) {
-            val mContext = LocalContext.current
-
-            // Declaring and initializing a calendar
-            val mCalendar = Calendar.getInstance()
-            val mHour = mCalendar[Calendar.HOUR_OF_DAY]
-            val mMinute = mCalendar[Calendar.MINUTE]
-
-            // Value for storing time as a string
-            val mTime = remember { mutableStateOf("") }
-
-            val mTimePickerDialog = TimePickerDialog(
-                mContext,
-                { _, mHour: Int, mMinute: Int ->
-                    val selectedTime = "$mHour:$mMinute"
-                    mTime.value = selectedTime
-                    mixRoutineDetails.copy(time = selectedTime) // Update the time value in your repository
-                }, mHour, mMinute, false
+            //Row(modifier = Modifier.padding(start = 8.dp)) {
+            RadioButton(
+                selected = selectedOption == ShowTimeInputOption.SHOW,
+                onClick = { selectedOption = ShowTimeInputOption.SHOW }
+            )
+            //Text(text = "Show")
+            Text(text = "Hide", modifier = Modifier.padding(start = 16.dp))
+            RadioButton(
+                selected = selectedOption == ShowTimeInputOption.HIDE,
+                onClick = { selectedOption = ShowTimeInputOption.HIDE }
             )
 
-            /*Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {*/
 
-            // On button click, TimePicker is
-            // displayed, user can select a time
-            Button(
-                onClick = { mTimePickerDialog.show() },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))
-            ) {
-                Text(text = "Select a time to turn on/off", color = Color.White)
+            if (selectedOption == ShowTimeInputOption.SHOW) {
+                val mContext = LocalContext.current
+
+                // Declaring and initializing a calendar
+                val mCalendar = Calendar.getInstance()
+                val mHour = mCalendar[Calendar.HOUR_OF_DAY]
+                val mMinute = mCalendar[Calendar.MINUTE]
+
+                // Value for storing time as a string
+                val mTime = remember { mutableStateOf("") }
+
+                val mTimePickerDialog = TimePickerDialog(
+                    mContext,
+                    { _, mHour: Int, mMinute: Int ->
+                        val selectedTime = "$mHour:$mMinute"
+                        mTime.value = selectedTime
+                        mixRoutineDetails.copy(time = selectedTime) // Update the time value in your repository
+                    }, mHour, mMinute, false
+                )
+
+                Button(
+                    onClick = { mTimePickerDialog.show() },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))
+                ) {
+                    Text(text = "Select a time to turn on/off", color = Color.White)
+                }
+
+                // Add a spacer of 75dp
+                Spacer(modifier = Modifier.size(75.dp))
+
+                // Display selected time
+                Text(text = "Selected Time: ${mTime.value}", fontSize = 14.sp)
             }
 
-            // Add a spacer of 75dp
-            Spacer(modifier = Modifier.size(75.dp))
+            var selectedOption2 by remember { mutableStateOf(ShowTimeInputOption2.SHOW) }
 
-            // Display selected time
-            Text(text = "Selected Time: ${mTime.value}", fontSize = 14.sp)
-            //}
+            //Column(modifier = Modifier.fillMaxWidth()) {
+            Text(text = "Show Timer Input")
 
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-            //////////////////////////////////////////////////
-//        var isSwitchOn by remember { mutableStateOf(showTimeInput) }
-//        Text(text = "Show Time Input")
-//        Switch(
-//            checked = isSwitchOn,
-//            onCheckedChange = { isSwitchOn = it },
-//            modifier = Modifier.padding(start = 8.dp)
-//        )
-//
-//        if (isSwitchOn) {
-//            // Fetching local context
-//            val mContext = LocalContext.current
-//
-//            // Declaring and initializing a calendar
-//            val mCalendar = Calendar.getInstance()
-//            val mHour = mCalendar[Calendar.HOUR_OF_DAY]
-//            val mMinute = mCalendar[Calendar.MINUTE]
-//
-//            // Value for storing time as a string
-//            val mTime = remember { mutableStateOf("") }
-//
-//            val mTimePickerDialog = TimePickerDialog(
-//                mContext,
-//                { _, mHour: Int, mMinute: Int ->
-//                    val selectedTime = "$mHour:$mMinute"
-//                    mTime.value = selectedTime
-//                    mixRoutineDetails.copy(time = selectedTime) // Update the time value in your repository
-//                }, mHour, mMinute, false
-//            )
-//
-//            /*Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {*/
-//
-//            // On button click, TimePicker is
-//            // displayed, user can select a time
-//            Button(onClick = { mTimePickerDialog.show() }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))) {
-//                Text(text = "Select a time to turn on/off", color = Color.White)
-//            }
-//
-//            // Add a spacer of 75dp
-//            Spacer(modifier = Modifier.size(75.dp))
-//
-//            // Display selected time
-//            Text(text = "Selected Time: ${mTime.value}", fontSize = 14.sp)
-//        }
-
-            //////////////////////////////////////////////////
-            var isSwitchOn2 by remember { mutableStateOf(showClockInput) }
-            Text(text = "Show Clock Input")
-            Switch(
-                checked = isSwitchOn2,
-                onCheckedChange = { isSwitchOn2 = it },
-                modifier = Modifier.padding(start = 8.dp)
+            //Row(modifier = Modifier.padding(start = 8.dp)) {
+            RadioButton(
+                selected = selectedOption2 == ShowTimeInputOption2.SHOW,
+                onClick = { selectedOption2 = ShowTimeInputOption2.SHOW }
+            )
+            //Text(text = "Show")
+            Text(text = "Hide", modifier = Modifier.padding(start = 16.dp))
+            RadioButton(
+                selected = selectedOption2 == ShowTimeInputOption2.HIDE,
+                onClick = { selectedOption2 = ShowTimeInputOption2.HIDE }
             )
 
-            if (isSwitchOn2) {
+
+            if (selectedOption2 == ShowTimeInputOption2.SHOW) {
                 // Fetching local context
                 // Fetching local context
                 val mContext = LocalContext.current
@@ -412,12 +318,6 @@ fun MixRoutineInputForm(
                     }, mEndHour, mEndMinute, false
                 )
 
-                /*Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {*/
-                // On button click, start time picker is displayed
                 Button(
                     onClick = { mStartTimePickerDialog.show() },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))
@@ -464,42 +364,39 @@ fun MixRoutineInputForm(
                 val duration = calculateDuration(mStartTime.value, mEndTime.value)
                 mixRoutineDetails.copy(duration = duration)
             }
-            /////////////////////////////////////TEXT//////////////////////////
-            /////////////////////////////////////TEXT//////////////////////////
-
 
             Text(text = "Then turn device:")
 
             /////////////////////////////////Device Selection/////////////////////////////////////////////////////
             var items = itemsRepository.getAllItemsStream().collectAsState(emptyList())
 
-            var expanded2 by remember { mutableStateOf(false) }
-            var selectedOption2 by remember { mutableStateOf<Item?>(null) }
+            var expanded3 by remember { mutableStateOf(false) }
+            var selectedOption3 by remember { mutableStateOf<Item?>(null) }
 
             ExposedDropdownMenuBox(
-                expanded = expanded2,
-                onExpandedChange = { expanded2 = !expanded2 }
+                expanded = expanded3,
+                onExpandedChange = { expanded3 = !expanded3 }
             ) {
                 TextField(
                     readOnly = true,
-                    value = selectedOption2?.name ?: "",
+                    value = selectedOption3?.name ?: "",
                     onValueChange = { },
                     label = { Text("Select Device") },
                     trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded2)
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded3)
                     },
                     colors = ExposedDropdownMenuDefaults.textFieldColors()
                 )
 
                 ExposedDropdownMenu(
-                    expanded = expanded2,
-                    onDismissRequest = { expanded2 = false }
+                    expanded = expanded3,
+                    onDismissRequest = { expanded3 = false }
                 ) {
                     items.value.forEach { item ->
                         DropdownMenuItem(
                             onClick = {
-                                selectedOption2 = item
-                                expanded2 = false
+                                selectedOption3 = item
+                                expanded3 = false
                                 onItemSelected(item)
                             }
                         ) {
@@ -550,80 +447,5 @@ fun MixRoutineInputForm(
                 }
             }
         }
-
-//        OutlinedTextField(
-//            value = mixRoutineDetails.status,
-//            onValueChange = { onValueChange(mixRoutineDetails.copy(status = it)) },
-//           //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-//            label = { Text(stringResource(R.string.status_req)) },
-//            modifier = Modifier.fillMaxWidth(),
-//            enabled = enabled,
-//            singleLine = true
-//        )
     }
 }
-//}
-
-//@OptIn(ExperimentalMaterialApi::class)
-//@Composable
-//fun ItemDropdownMenu(
-//    itemsRepository: ItemsRepository,
-//    onItemSelected: (Item) -> Unit
-//) {
-//    var items = itemsRepository.getAllItemsStream().collectAsState(emptyList())
-//
-//    var expanded by remember { mutableStateOf(false) }
-//    var selectedOption by remember { mutableStateOf<Item?>(null) }
-//
-//    ExposedDropdownMenuBox(
-//        expanded = expanded,
-//        onExpandedChange = { expanded = !expanded }
-//    ) {
-//        TextField(
-//            readOnly = true,
-//            value = selectedOption?.name ?: "",
-//            onValueChange = { },
-//            label = { Text("Select Item") },
-//            trailingIcon = {
-//                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-//            },
-//            colors = ExposedDropdownMenuDefaults.textFieldColors()
-//        )
-//
-//        ExposedDropdownMenu(
-//            expanded = expanded,
-//            onDismissRequest = { expanded = false }
-//        ) {
-//            items.value.forEach { item ->
-//                DropdownMenuItem(
-//                    onClick = {
-//                        selectedOption = item
-//                        expanded = false
-//                        onItemSelected(item)
-//                    }
-//                ) {
-//                    Text(text = item.name)
-//                }
-//            }
-//
-//        }
-//    }
-//}
-
-//@Preview(showBackground = true)
-//@Composable
-//private fun MixRoutineEntryScreenPreview() {
-//    InventoryTheme {
-//        MixRoutineEntryBody(
-//            mixRoutineUiState = MixRoutineUiState(
-//                MixRoutineDetails(
-//                    name = "MixRoutine name",
-//                    price = "10.00",
-//                    quantity = "5"
-//                )
-//            ),
-//            onMixRoutineValueChange = {},
-//            onSaveClick = {}
-//        )
-//    }
-//}

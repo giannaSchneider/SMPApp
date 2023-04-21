@@ -70,6 +70,7 @@ data class ClockRoutineUiState(
 
 data class ClockRoutineDetails(
     val id: Int = 0,
+    val deviceId: String = "",
     val name: String = "",
     val time: String = "",
     val status: String = ""
@@ -82,6 +83,7 @@ data class ClockRoutineDetails(
  */
 fun ClockRoutineDetails.toClockRoutine(): ClockRoutine = ClockRoutine(
     id = id,
+    deviceId = deviceId,
     name = name,
     time = time.toDoubleOrNull() ?: 0.0,
     status = status//.toBooleanStrictOrNull()

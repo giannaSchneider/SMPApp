@@ -30,6 +30,7 @@ This routine allows the user to turn a device on or off after a set period of ti
 data class ClockRoutine(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val deviceId: String,
     val name: String,
     val time: Double,
     val status: String

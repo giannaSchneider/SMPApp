@@ -31,6 +31,7 @@ They can turn a device on or off after another device has been set on or off aft
 data class MixRoutine(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val deviceId: String,
     val name: String,
     val time: Double,
     val status: String,

@@ -70,6 +70,7 @@ data class TimerRoutineUiState(
 
 data class TimerRoutineDetails(
     val id: Int = 0,
+    val deviceId: String = "",
     val name: String = "",
     val startTime: String = "",
     val endTime: String = "",
@@ -84,6 +85,7 @@ data class TimerRoutineDetails(
  */
 fun TimerRoutineDetails.toTimerRoutine(): TimerRoutine = TimerRoutine(
     id = id,
+    deviceId = deviceId,
     name = name,
     startTime = startTime,//.toDoubleOrNull() ?: 0.0,
     endTime = endTime,//.toDoubleOrNull() ?: 0.0,
@@ -104,6 +106,7 @@ fun TimerRoutine.toTimerRoutineUiState(isEntryValid: Boolean = false): TimerRout
  */
 fun TimerRoutine.toTimerRoutineDetails(): TimerRoutineDetails = TimerRoutineDetails(
     id = id,
+    //deviceId = deviceId,
     name = name,
     startTime = startTime.toString(),
     endTime = endTime.toString(),

@@ -71,6 +71,7 @@ data class MultiRoutineUiState(
 data class MultiRoutineDetails(
     val id: Int = 0,
     val name: String = "",
+    val deviceId: String = "",
     //val time: String = "",
     val status: String = "",
     val id2: Int = 0,
@@ -87,6 +88,7 @@ data class MultiRoutineDetails(
 fun MultiRoutineDetails.toMultiRoutine(): MultiRoutine = MultiRoutine(
     id = id,
     name = name,
+    deviceId = deviceId,
     //time = time.toDoubleOrNull() ?: 0.0,
     status = status,//.toBooleanStrictOrNull()
     id2 = id2,

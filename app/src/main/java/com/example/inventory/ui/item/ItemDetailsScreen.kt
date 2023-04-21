@@ -22,8 +22,6 @@ import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -38,19 +36,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
-import com.example.inventory.data.Item
 import com.example.inventory.data.TimerRoutine
 import com.example.inventory.ui.AppViewModelProvider
 
 import com.example.inventory.ui.navigation.NavigationDestination
-import com.example.inventory.ui.theme.InventoryTheme
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 
 object ItemDetailsDestination : NavigationDestination {
     override val route = "item_details"
@@ -63,10 +57,8 @@ object ItemDetailsDestination : NavigationDestination {
 fun ItemDetailsScreen(
     navigateToEditItem: (Int) -> Unit,
     navigateBack: () -> Unit,
-    navigateToTimerRoutineEntry: () -> Unit,
-    navigateToClockRoutineEntry: () -> Unit,
-    navigateToMultiRoutineEntry: () -> Unit,
-    navigateToMixRoutineEntry: () -> Unit,
+    navigateToIntermediateScreen: () -> Unit,
+
     navigateToTimerRoutineUpdate: (Int) -> Unit,
 
     modifier: Modifier = Modifier,
@@ -100,11 +92,7 @@ fun ItemDetailsScreen(
         ItemDetailsBody(
             itemDetailsUiState = uiState.value,
             onSellItem = { viewModel.reduceQuantityByOne() },
-            //onAddItem = {navigateToItemEntry()},
-            onAddTimerRoutine = {navigateToTimerRoutineEntry()},
-            onAddClockRoutine = {navigateToClockRoutineEntry()},
-            onAddMultiRoutine = {navigateToMultiRoutineEntry()},
-            onAddMixRoutine = {navigateToMixRoutineEntry()},
+            onAddARoutine = navigateToIntermediateScreen,
 
             timerRoutineList = itemUiState2.timerRoutineList,
             onTimerRoutineClick = navigateToTimerRoutineUpdate,
@@ -112,10 +100,12 @@ fun ItemDetailsScreen(
         //onTimerRoutineClick: (Int) -> Unit,
 
 
-            /*onViewTimerRoutine = {navigateToTimerRoutineDetails()},
+           /* onViewTimerRoutine = {navigateToTimerRoutineDetails()},
             onViewClockRoutine = {navigateToClockRoutineDetails()},
             onViewMultiRoutine = {navigateToMultiRoutineDetails()},
             onViewMixRoutine = {navigateToMixRoutineDetails()},*/
+
+
             onDelete = {
                 // Note: If the user rotates the screen very fast, the operation may get cancelled
                 // and the item may not be deleted from the Database. This is because when config
@@ -135,10 +125,7 @@ fun ItemDetailsScreen(
 private fun ItemDetailsBody(
     itemDetailsUiState: ItemDetailsUiState,
     onSellItem: () -> Unit,
-    onAddTimerRoutine: () -> Unit,
-    onAddClockRoutine: () -> Unit,
-    onAddMultiRoutine: () -> Unit,
-    onAddMixRoutine: () -> Unit,
+    onAddARoutine: () -> Unit,
     timerRoutineList: List<TimerRoutine>,
     onTimerRoutineClick: (Int) -> Unit,
 
@@ -155,11 +142,12 @@ private fun ItemDetailsBody(
 
         Column(
             modifier = modifier
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
+                .padding(16.dp),
+                //.verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
+
             ItemInputForm(itemDetails = itemDetailsUiState.itemDetails, enabled = false)
             Button(
                 onClick = onSellItem,
@@ -168,14 +156,30 @@ private fun ItemDetailsBody(
             ) {
                 Text(stringResource(R.string.sell))
             }
+
+            OutlinedButton(
+                onClick = { deleteConfirmationRequired = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.delete))
+            }
+            if (deleteConfirmationRequired) {
+                DeleteConfirmationDialog(
+                    onDeleteConfirm = {
+                        deleteConfirmationRequired = false
+                        onDelete()
+                    },
+                    onDeleteCancel = { deleteConfirmationRequired = false }
+                )
+            }
             Button(
-                onClick = onAddTimerRoutine,
+                onClick = onAddARoutine,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = true
             ) {
-                Text(stringResource(R.string.add_timer_routine))
+                Text(stringResource(R.string.add_a_routine))
             }
-            Button(
+           /* Button(
                 onClick = onAddClockRoutine,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = true
@@ -195,37 +199,37 @@ private fun ItemDetailsBody(
                 enabled = true
             ) {
                 Text(stringResource(R.string.add_mix_routine))
-            }
+            }*/
 
 
-//        Button(
-//            onClick = onViewTimerRoutine,
-//            modifier = Modifier.fillMaxWidth(),
-//            //enabled = !itemDetailsUiState.outOfStock
-//        ) {
-//            Text(stringResource(R.string.timer_routine_details_title))
-//        }
-//        Button(
-//            onClick = onViewClockRoutine,
-//            modifier = Modifier.fillMaxWidth(),
-//            //enabled = !itemDetailsUiState.outOfStock
-//        ) {
-//            Text(stringResource(R.string.clock_routine_details_title))
-//        }
-//        Button(
-//            onClick = onViewMultiRoutine,
-//            modifier = Modifier.fillMaxWidth(),
-//            //enabled = !itemDetailsUiState.outOfStock
-//        ) {
-//            Text(stringResource(R.string.multi_routine_details_title))
-//        }
-//        Button(
-//            onClick = onViewMixRoutine,
-//            modifier = Modifier.fillMaxWidth(),
-//            //enabled = !itemDetailsUiState.outOfStock
-//        ) {
-//            Text(stringResource(R.string.mix_routine_details_title))
-//        }
+        /*Button(
+            onClick = onViewTimerRoutine,
+            modifier = Modifier.fillMaxWidth(),
+            //enabled = !itemDetailsUiState.outOfStock
+        ) {
+            Text(stringResource(R.string.timer_routine_details_title))
+        }
+        Button(
+            onClick = onViewClockRoutine,
+            modifier = Modifier.fillMaxWidth(),
+            //enabled = !itemDetailsUiState.outOfStock
+        ) {
+            Text(stringResource(R.string.clock_routine_details_title))
+        }
+        Button(
+            onClick = onViewMultiRoutine,
+            modifier = Modifier.fillMaxWidth(),
+            //enabled = !itemDetailsUiState.outOfStock
+        ) {
+            Text(stringResource(R.string.multi_routine_details_title))
+        }
+        Button(
+            onClick = onViewMixRoutine,
+            modifier = Modifier.fillMaxWidth(),
+            //enabled = !itemDetailsUiState.outOfStock
+        ) {
+            Text(stringResource(R.string.mix_routine_details_title))
+        }*/
 //        Button(
 //            onClick = onAddItem,
 //            modifier = Modifier.fillMaxWidth(),
@@ -233,55 +237,26 @@ private fun ItemDetailsBody(
 //        ) {
 //            Text(stringResource(R.string.item_entry_title))
 //        }
-            OutlinedButton(
-                onClick = { deleteConfirmationRequired = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.delete))
-            }
-            if (deleteConfirmationRequired) {
-                DeleteConfirmationDialog(
-                    onDeleteConfirm = {
-                        deleteConfirmationRequired = false
-                        onDelete()
-                    },
-                    onDeleteCancel = { deleteConfirmationRequired = false }
-                )
-            }
+
+
             Divider()
-        }
+            //}
 
             TimerRoutineListHeader()
             Divider()
-//            LazyColumn(modifier = modifier.weight(1f)) {
-//                items(timerRoutineList) { routine ->
-//                    TimerRoutineList(timerRoutineList = timerRoutineList,
-//                onTimerRoutineClick = { onTimerRoutineClick(it.id) })
-//                }
-//            }
 
-//        Box(
-//            modifier = Modifier
-//                .padding(bottom = 48.dp) // set the bottom padding to the height of the TimerRoutineListHeader
-//                .fillMaxSize(),
-//            contentAlignment = Alignment.BottomCenter
-//        ) {
-//        TimerRoutineListHeader()
-//        Divider()
-        if (timerRoutineList.isEmpty()) {
-            Text(
-                text = stringResource(R.string.no_item_description),
-                style = MaterialTheme.typography.subtitle2
-            )
-        } else {
-            TimerRoutineList(
-                timerRoutineList = timerRoutineList,
-                onTimerRoutineClick = { onTimerRoutineClick(it.id) })
+            if (timerRoutineList.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.no_item_description),
+                    style = MaterialTheme.typography.subtitle2
+                )
+            } else {
+                TimerRoutineList(
+                    timerRoutineList = timerRoutineList,
+                    onTimerRoutineClick = { onTimerRoutineClick(it.id) })
+            }
         }
-//    }
-//        Divider()
 
-//}
 }
 @Composable
 private fun TimerRoutineList(
@@ -344,7 +319,7 @@ private val headerList = listOf(
     TimerRoutineHeader(headerStringId = R.string.quantity_in_stock, weight = 1.0f)
 )
 
-
+//Put buttons in another dialog box
 @Composable
 private fun DeleteConfirmationDialog(
     onDeleteConfirm: () -> Unit,
@@ -365,21 +340,7 @@ private fun DeleteConfirmationDialog(
             TextButton(onClick = onDeleteConfirm) {
                 Text(text = stringResource(R.string.yes))
             }
-        }
+        },
+
     )
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun ItemDetailsScreenPreview() {
-//    InventoryTheme {
-//        ItemDetailsBody(
-//            ItemDetailsUiState(
-//                outOfStock = true,
-//                itemDetails = ItemDetails(1, "Pen", "$100", "10")
-//            ),
-//            onSellItem = {},
-//            onDelete = {}
-//        )
-//    }
-//}

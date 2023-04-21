@@ -97,6 +97,7 @@ data class MixRoutineUiState(
 
 data class MixRoutineDetails(
     val id: Int = 0,
+    val deviceId: String = "",
     val name: String = "",
     val time: String = "",
     val status: String = "",
@@ -116,6 +117,7 @@ data class MixRoutineDetails(
  */
 fun MixRoutineDetails.toMixRoutine(): MixRoutine = MixRoutine(
     id = id,
+    deviceId = deviceId,
     name = name,
     time = time.toDoubleOrNull() ?: 0.0,
     status = status,//.toBooleanStrictOrNull()

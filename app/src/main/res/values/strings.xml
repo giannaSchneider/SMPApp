@@ -61,6 +61,7 @@
     <string name="mix_routine_name_req">Routine Name *</string>
     <string name="mix_routine_time_req">Time to Set*</string>
     <string name="multi_device_name_req">Device Name *</string>
+    <string name="add_a_routine">Add a Routine</string>
 
 
 
