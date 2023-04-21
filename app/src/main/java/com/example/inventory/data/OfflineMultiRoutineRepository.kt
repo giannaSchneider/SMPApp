@@ -19,7 +19,7 @@ package com.example.inventory.data
 import kotlinx.coroutines.flow.Flow
 
 class OfflineMultiRoutineRepository(private val MultiRoutineDao: MultiRoutineDao) : MultiRoutineRepository {
-    //override fun getAllRoutinesStream(): Flow<List<TimerRoutine>> = routineDao.getAllRoutines()
+    override fun getAllMultiRoutinesStream(): Flow<List<MultiRoutine>> = MultiRoutineDao.getAllMultiRoutines()
 
 
     override fun getMultiRoutineStream(id: Int): Flow<MultiRoutine?> = MultiRoutineDao.getMultiRoutine(id)

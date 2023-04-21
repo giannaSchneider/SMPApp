@@ -38,7 +38,7 @@ abstract class MultiRoutineDatabase : RoomDatabase() {
         fun getDatabase(context: Context): MultiRoutineDatabase {
             // if the Instance is not null, return it, otherwise create a new database instance.
             return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, MultiRoutineDatabase::class.java, "routine_database")
+                Room.databaseBuilder(context, MultiRoutineDatabase::class.java, "multi_routine_database")
                     /**
                      * Setting this option in your app's database builder means that Room
                      * permanently deletes all data from the tables in your database when it

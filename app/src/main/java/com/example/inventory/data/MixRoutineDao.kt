@@ -32,8 +32,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MixRoutineDao {
 
-//    @Query("SELECT * from timerRoutine ORDER BY name ASC")
-//    fun getAllRoutines(): Flow<List<TimerRoutine>>
+    @Query("SELECT * from mixRoutine ORDER BY name ASC")
+    fun getAllMixRoutines(): Flow<List<MixRoutine>>
 
 
     @Query("SELECT * from mixRoutine WHERE id = :id")

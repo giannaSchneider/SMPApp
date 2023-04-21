@@ -40,6 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
+import com.example.inventory.data.ClockRoutine
+import com.example.inventory.data.MixRoutine
+import com.example.inventory.data.MultiRoutine
 import com.example.inventory.data.TimerRoutine
 import com.example.inventory.ui.AppViewModelProvider
 
@@ -60,12 +63,22 @@ fun ItemDetailsScreen(
     navigateToIntermediateScreen: () -> Unit,
 
     navigateToTimerRoutineUpdate: (Int) -> Unit,
+    navigateToClockRoutineUpdate: (Int) -> Unit,
+    navigateToMultiRoutineUpdate: (Int) -> Unit,
+    navigateToMixRoutineUpdate: (Int) -> Unit,
+
+
 
     modifier: Modifier = Modifier,
     viewModel: ItemDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val itemUiState2 by viewModel.itemUiState2.collectAsState()
+    val itemUiState3 by viewModel.itemUiState3.collectAsState()
+    val itemUiState4 by viewModel.itemUiState4.collectAsState()
+    val itemUiState5 by viewModel.itemUiState5.collectAsState()
+
+
 
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
@@ -96,8 +109,12 @@ fun ItemDetailsScreen(
 
             timerRoutineList = itemUiState2.timerRoutineList,
             onTimerRoutineClick = navigateToTimerRoutineUpdate,
-            //timerRoutineList: List<TimerRoutine>,
-        //onTimerRoutineClick: (Int) -> Unit,
+            clockRoutineList = itemUiState3.clockRoutineList,
+            onClockRoutineClick = navigateToClockRoutineUpdate,
+            multiRoutineList = itemUiState4.multiRoutineList,
+            onMultiRoutineClick = navigateToMultiRoutineUpdate,
+            mixRoutineList = itemUiState5.mixRoutineList,
+            onMixRoutineClick = navigateToMixRoutineUpdate,
 
 
            /* onViewTimerRoutine = {navigateToTimerRoutineDetails()},
@@ -126,9 +143,18 @@ private fun ItemDetailsBody(
     itemDetailsUiState: ItemDetailsUiState,
     onSellItem: () -> Unit,
     onAddARoutine: () -> Unit,
+
     timerRoutineList: List<TimerRoutine>,
     onTimerRoutineClick: (Int) -> Unit,
 
+    clockRoutineList: List<ClockRoutine>,
+    onClockRoutineClick: (Int) -> Unit,
+
+    multiRoutineList: List<MultiRoutine>,
+    onMultiRoutineClick: (Int) -> Unit,
+
+    mixRoutineList: List<MixRoutine>,
+    onMixRoutineClick: (Int) -> Unit,
 
     /*onViewTimerRoutine: () -> Unit,
     onViewClockRoutine: () -> Unit,
@@ -138,8 +164,6 @@ private fun ItemDetailsBody(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-   // Column(modifier.verticalScroll(rememberScrollState())) {
-
         Column(
             modifier = modifier
                 .padding(16.dp),
@@ -240,14 +264,13 @@ private fun ItemDetailsBody(
 
 
             Divider()
-            //}
 
             TimerRoutineListHeader()
             Divider()
 
             if (timerRoutineList.isEmpty()) {
                 Text(
-                    text = stringResource(R.string.no_item_description),
+                    text = ("No Timer Routines"),
                     style = MaterialTheme.typography.subtitle2
                 )
             } else {
@@ -255,9 +278,41 @@ private fun ItemDetailsBody(
                     timerRoutineList = timerRoutineList,
                     onTimerRoutineClick = { onTimerRoutineClick(it.id) })
             }
+            if (clockRoutineList.isEmpty()) {
+                Text(
+                    text = ("No Clock Routines"),
+                    style = MaterialTheme.typography.subtitle2
+                )
+            } else {
+                ClockRoutineList(
+                    clockRoutineList = clockRoutineList,
+                    onClockRoutineClick = { onClockRoutineClick(it.id) })
+            }
+            if (multiRoutineList.isEmpty()) {
+                Text(
+                    text = ("No Conditional Routines"),
+                    style = MaterialTheme.typography.subtitle2
+                )
+            } else {
+                MultiRoutineList(
+                    multiRoutineList = multiRoutineList,
+                    onMultiRoutineClick = { onMultiRoutineClick(it.id) })
+            }
+            if (mixRoutineList.isEmpty()) {
+                Text(
+                    text = ("No Mix Routines"),
+                    style = MaterialTheme.typography.subtitle2
+                )
+            } else {
+                MixRoutineList(
+                    mixRoutineList = mixRoutineList,
+                    onMixRoutineClick = { onMixRoutineClick(it.id) })
+            }
         }
 
 }
+
+
 @Composable
 private fun TimerRoutineList(
     timerRoutineList: List<TimerRoutine>,
@@ -344,3 +399,127 @@ private fun DeleteConfirmationDialog(
 
     )
 }
+
+@Composable
+private fun ClockRoutineList(
+    clockRoutineList: List<ClockRoutine>,
+    onClockRoutineClick: (ClockRoutine) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(items = clockRoutineList, key = { it.id }) { clockRoutine ->
+            ClockRoutine(clockRoutine = clockRoutine, onClockRoutineClick = onClockRoutineClick)
+            Divider()
+        }
+    }
+}
+
+
+
+@Composable
+private fun ClockRoutine(
+    clockRoutine: ClockRoutine,
+    onClockRoutineClick: (ClockRoutine) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier
+        .fillMaxWidth()
+        .clickable { onClockRoutineClick(clockRoutine) }
+        .padding(vertical = 16.dp)
+    ) {
+        Text(
+            text = clockRoutine.name,
+            modifier = Modifier.weight(1.5f),
+            fontWeight = FontWeight.Bold
+        )
+//        Text(
+//            text = clockRoutine.time,
+//            modifier = Modifier.weight(1.0f)
+//        )
+        Text(text = clockRoutine.status, modifier = Modifier.weight(1.0f))
+    }
+}
+
+@Composable
+private fun MultiRoutineList(
+    multiRoutineList: List<MultiRoutine>,
+    onMultiRoutineClick: (MultiRoutine) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(items = multiRoutineList, key = { it.id }) { multiRoutine ->
+            MultiRoutine(multiRoutine = multiRoutine, onMultiRoutineClick = onMultiRoutineClick)
+            Divider()
+        }
+    }
+}
+
+
+
+@Composable
+private fun MultiRoutine(
+    multiRoutine: MultiRoutine,
+    onMultiRoutineClick: (MultiRoutine) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier
+        .fillMaxWidth()
+        .clickable { onMultiRoutineClick(multiRoutine) }
+        .padding(vertical = 16.dp)
+    ) {
+        Text(
+            text = multiRoutine.name,
+            modifier = Modifier.weight(1.5f),
+            fontWeight = FontWeight.Bold
+        )
+//        Text(
+//            text = clockRoutine.time,
+//            modifier = Modifier.weight(1.0f)
+//        )
+        Text(text = multiRoutine.status, modifier = Modifier.weight(1.0f))
+    }
+}
+
+@Composable
+private fun MixRoutineList(
+    mixRoutineList: List<MixRoutine>,
+    onMixRoutineClick: (MixRoutine) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(items = mixRoutineList, key = { it.id }) { mixRoutine ->
+            MixRoutine(mixRoutine = mixRoutine, onMixRoutineClick = onMixRoutineClick)
+            Divider()
+        }
+    }
+}
+
+
+
+@Composable
+private fun MixRoutine(
+    mixRoutine: MixRoutine,
+    onMixRoutineClick: (MixRoutine) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier
+        .fillMaxWidth()
+        .clickable { onMixRoutineClick(mixRoutine) }
+        .padding(vertical = 16.dp)
+    ) {
+        Text(
+            text = mixRoutine.name,
+            modifier = Modifier.weight(1.5f),
+            fontWeight = FontWeight.Bold
+        )
+//        Text(
+//            text = clockRoutine.time,
+//            modifier = Modifier.weight(1.0f)
+//        )
+        Text(text = mixRoutine.status, modifier = Modifier.weight(1.0f))
+    }
+}
+

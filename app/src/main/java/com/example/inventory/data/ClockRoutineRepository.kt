@@ -27,7 +27,7 @@ interface ClockRoutineRepository {
     /**
      * Retrieve all the routine from the the given data source.
      */
-    //fun getAllRoutinesStream(): Flow<List<TimerRoutine>>
+    fun getAllClockRoutinesStream(): Flow<List<ClockRoutine>>
 
     /**
      * Retrieve an routine from the given data source that matches with the [id].

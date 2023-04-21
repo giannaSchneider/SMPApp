@@ -27,7 +27,7 @@ interface MixRoutineRepository {
     /**
      * Retrieve all the routine from the the given data source.
      */
-    //fun getAllRoutinesStream(): Flow<List<TimerRoutine>>
+    fun getAllMixRoutinesStream(): Flow<List<MixRoutine>>
 
     /**
      * Retrieve an routine from the given data source that matches with the [id].

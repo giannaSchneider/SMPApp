@@ -24,8 +24,6 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
-/////////////////////////delete
-
 /**
  * Database access object to access the Inventory database
  */

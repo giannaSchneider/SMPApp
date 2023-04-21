@@ -65,7 +65,7 @@ fun InventoryNavHost(
                 navigateToEditItem = {navController.navigate("${ItemEditDestination.route}/$it") },
                 //navigateToItemEntry = {navController.navigate(ItemEntryDestination.route)},
                 navigateBack = { navController.navigateUp() },
-               /* navigateToTimerRoutineEntry = {navController.navigate(TimerRoutineEntryDestination.route)},
+                /*navigateToTimerRoutineEntry = {navController.navigate(TimerRoutineEntryDestination.route)},
                 navigateToClockRoutineEntry = {navController.navigate(ClockRoutineEntryDestination.route)},
                 navigateToMultiRoutineEntry = {navController.navigate(MultiRoutineEntryDestination.route)},
                 navigateToMixRoutineEntry = {navController.navigate(MixRoutineEntryDestination.route)},*/
@@ -74,6 +74,16 @@ fun InventoryNavHost(
                 },
                 navigateToTimerRoutineUpdate = {
                     navController.navigate("${TimerRoutineDetailsDestination.route}/${it}")
+                },
+                navigateToClockRoutineUpdate = {
+                    navController.navigate("${ClockRoutineDetailsDestination.route}/${it}")
+                },
+
+                navigateToMultiRoutineUpdate = {
+                    navController.navigate("${MultiRoutineDetailsDestination.route}/${it}")
+                },
+                navigateToMixRoutineUpdate = {
+                    navController.navigate("${MixRoutineDetailsDestination.route}/${it}")
                 }
 
                 /*navigateToTimerRoutineDetails = { navController.navigate("${TimerRoutineDetailsDestination.route}/${it}") },
@@ -93,7 +103,7 @@ fun InventoryNavHost(
             IntermediateScreen(
                 //navigateToEditItem = {navController.navigate("${ItemEditDestination.route}/$it") },
                 //navigateToItemEntry = {navController.navigate(ItemEntryDestination.route)},
-                navigateBack = { navController.navigateUp() },
+                navigateBack = {navController.navigateUp()},
                 navigateToTimerRoutineEntry = {navController.navigate(TimerRoutineEntryDestination.route)},
                 navigateToClockRoutineEntry = {navController.navigate(ClockRoutineEntryDestination.route)},
                 navigateToMultiRoutineEntry = {navController.navigate(MultiRoutineEntryDestination.route)},
@@ -162,7 +172,7 @@ fun InventoryNavHost(
                 onNavigateUp = { navController.navigateUp() },
             )
         }
-        /*composable(
+        composable(
             route = ClockRoutineDetailsDestination.routeWithArgs,
             arguments = listOf(navArgument(ClockRoutineDetailsDestination.clockRoutineIdArg) {
                 type = NavType.IntType
@@ -171,10 +181,9 @@ fun InventoryNavHost(
             navigateBack = { navController.navigateUp() },
             //onNavigateUp = { navController.navigateUp() },
             navigateToEditClockRoutine = { navController.navigate("${ClockRoutineEditDestination.route}/$it") }
-
-
             )
-        }*/
+        }
+
         composable(
             route = ClockRoutineEditDestination.routeWithArgs,
             arguments = listOf(navArgument(ClockRoutineEditDestination.clockRoutineIdArg) {
@@ -195,7 +204,7 @@ fun InventoryNavHost(
                 onNavigateUp = { navController.navigateUp() },
             )
         }
-        /*composable(
+        composable(
             route = MultiRoutineDetailsDestination.routeWithArgs,
             arguments = listOf(navArgument(MultiRoutineDetailsDestination.multiRoutineIdArg) {
                 type = NavType.IntType
@@ -207,7 +216,7 @@ fun InventoryNavHost(
 
 
             )
-        }*/
+        }
         composable(
             route = MultiRoutineEditDestination.routeWithArgs,
             arguments = listOf(navArgument(MultiRoutineEditDestination.multiRoutineIdArg) {
@@ -228,7 +237,7 @@ fun InventoryNavHost(
                 onNavigateUp = { navController.navigateUp() },
             )
         }
-        /*composable(
+        composable(
             route = MixRoutineDetailsDestination.routeWithArgs,
             arguments = listOf(navArgument(MixRoutineDetailsDestination.mixRoutineIdArg) {
                 type = NavType.IntType
@@ -240,7 +249,7 @@ fun InventoryNavHost(
 
 
             )
-        }*/
+        }
         composable(
             route = MixRoutineEditDestination.routeWithArgs,
             arguments = listOf(navArgument(MixRoutineEditDestination.mixRoutineIdArg) {

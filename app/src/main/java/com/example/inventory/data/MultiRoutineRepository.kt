@@ -27,7 +27,7 @@ interface MultiRoutineRepository {
     /**
      * Retrieve all the routine from the the given data source.
      */
-    //fun getAllRoutinesStream(): Flow<List<TimerRoutine>>
+    fun getAllMultiRoutinesStream(): Flow<List<MultiRoutine>>
 
     /**
      * Retrieve an routine from the given data source that matches with the [id].

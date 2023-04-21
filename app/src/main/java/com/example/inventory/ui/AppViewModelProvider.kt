@@ -28,7 +28,6 @@ import com.example.inventory.ui.item.ItemDetailsViewModel
 import com.example.inventory.ui.item.ItemEditViewModel
 import com.example.inventory.ui.item.ItemEntryViewModel
 import com.example.inventory.ui.routines.*
-//import com.example.inventory.ui.routines.TimerRoutineDetailsViewModel
 
 /**
  * Provides Factory to create instance of ViewModel for the entire Inventory app
@@ -53,7 +52,10 @@ object AppViewModelProvider {
             ItemDetailsViewModel(
                 this.createSavedStateHandle(),
                 inventoryApplication().container.itemsRepository,
-                inventoryApplication().container.routinesRepository
+                inventoryApplication().container.routinesRepository,
+                inventoryApplication().container.clockRoutineRepository,
+                inventoryApplication().container.multiRoutineRepository,
+                inventoryApplication().container.mixRoutineRepository
             )
         }
 
@@ -95,12 +97,12 @@ object AppViewModelProvider {
 
         }
 
-//        initializer {
-//            ClockRoutineDetailsViewModel(
-//                this.createSavedStateHandle(),
-//                inventoryApplication().container.clockRoutineRepository
-//            )
-//        }
+        initializer {
+            ClockRoutineDetailsViewModel(
+                this.createSavedStateHandle(),
+                inventoryApplication().container.clockRoutineRepository
+            )
+        }
 
         //////////////////////////Multi Routine/////////////////////////
         initializer {
@@ -112,12 +114,12 @@ object AppViewModelProvider {
                 inventoryApplication().container.multiRoutineRepository
             )
         }
-//        initializer {
-//            MultiRoutineDetailsViewModel(
-//                this.createSavedStateHandle(),
-//                inventoryApplication().container.multiRoutineRepository
-//            )
-//        }
+        initializer {
+            MultiRoutineDetailsViewModel(
+                this.createSavedStateHandle(),
+                inventoryApplication().container.multiRoutineRepository
+            )
+        }
 
         /////////////////////////Mix Routine//////////////////////////////
         initializer {
@@ -129,12 +131,13 @@ object AppViewModelProvider {
                 inventoryApplication().container.mixRoutineRepository
             )
         }
-//        initializer {
-//            MixRoutineDetailsViewModel(
-//                this.createSavedStateHandle(),
-//                inventoryApplication().container.mixRoutineRepository
-//            )
-//        }
+        initializer {
+            MixRoutineDetailsViewModel(
+                this.createSavedStateHandle(),
+                inventoryApplication().container.mixRoutineRepository,
+                inventoryApplication().container.itemsRepository
+            )
+        }
 
 
     }

@@ -32,8 +32,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ClockRoutineDao {
 
-//    @Query("SELECT * from timerRoutine ORDER BY name ASC")
-//    fun getAllRoutines(): Flow<List<TimerRoutine>>
+    @Query("SELECT * from clockRoutine ORDER BY name ASC")
+    fun getAllClockRoutines(): Flow<List<ClockRoutine>>
 
 
     @Query("SELECT * from clockRoutine WHERE id = :id")

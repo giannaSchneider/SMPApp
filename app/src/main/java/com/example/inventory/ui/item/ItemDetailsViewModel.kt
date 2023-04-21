@@ -19,10 +19,7 @@ package com.example.inventory.ui.item
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.inventory.data.Item
-import com.example.inventory.data.ItemsRepository
-import com.example.inventory.data.RoutinesRepository
-import com.example.inventory.data.TimerRoutine
+import com.example.inventory.data.*
 import com.example.inventory.ui.home.HomeUiState
 import com.example.inventory.ui.home.HomeViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,8 +36,13 @@ class ItemDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     private val itemsRepository: ItemsRepository,
     private val routinesRepository: RoutinesRepository,
+    private val clockRoutineRepository: ClockRoutineRepository,
+    private val multiRoutineRepository: MultiRoutineRepository,
+    private val mixRoutineRepository: MixRoutineRepository
 
-    ) : ViewModel() {
+
+
+) : ViewModel() {
 
     private val itemId: Int = checkNotNull(savedStateHandle[ItemDetailsDestination.itemIdArg])
 
@@ -65,6 +67,28 @@ class ItemDetailsViewModel(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(ItemDetailsViewModel.TIMEOUT_MILLIS),
                 initialValue = ItemUiState2()
+            )
+    val itemUiState3: StateFlow<ItemUiState3> =
+        clockRoutineRepository.getAllClockRoutinesStream().map { ItemUiState3(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(ItemDetailsViewModel.TIMEOUT_MILLIS),
+                initialValue = ItemUiState3()
+            )
+    val itemUiState4: StateFlow<ItemUiState4> =
+        multiRoutineRepository.getAllMultiRoutinesStream().map { ItemUiState4(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(ItemDetailsViewModel.TIMEOUT_MILLIS),
+                initialValue = ItemUiState4()
+            )
+
+    val itemUiState5: StateFlow<ItemUiState5> =
+        mixRoutineRepository.getAllMixRoutinesStream().map { ItemUiState5(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(ItemDetailsViewModel.TIMEOUT_MILLIS),
+                initialValue = ItemUiState5()
             )
     /**
      * Reduces the item quantity by one and update the [ItemsRepository]'s data source.
@@ -99,6 +123,13 @@ data class ItemDetailsUiState(
 
 )
 data class ItemUiState2(val timerRoutineList: List<TimerRoutine> = listOf())
+
+data class ItemUiState3(val clockRoutineList: List<ClockRoutine> = listOf())
+
+data class ItemUiState4(val multiRoutineList: List<MultiRoutine> = listOf())
+
+data class ItemUiState5(val mixRoutineList: List<MixRoutine> = listOf())
+
 
 
 
