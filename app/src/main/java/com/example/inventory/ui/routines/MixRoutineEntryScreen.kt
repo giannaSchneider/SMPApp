@@ -213,9 +213,11 @@ fun MixRoutineInputForm(
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
             var selectedOption by remember { mutableStateOf(ShowTimeInputOption.SHOW) }
+        var selectedOption2 by remember { mutableStateOf(ShowTimeInputOption2.SHOW) }
+
 
             //Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Show Time Input")
+            Text(text = "Set at a certain time")
 
             //Row(modifier = Modifier.padding(start = 8.dp)) {
             RadioButton(
@@ -223,14 +225,15 @@ fun MixRoutineInputForm(
                 onClick = { selectedOption = ShowTimeInputOption.SHOW }
             )
             //Text(text = "Show")
-            Text(text = "Hide", modifier = Modifier.padding(start = 16.dp))
+            Text(text = "Hide", modifier = Modifier.padding(start = 10.dp))
             RadioButton(
                 selected = selectedOption == ShowTimeInputOption.HIDE,
                 onClick = { selectedOption = ShowTimeInputOption.HIDE }
             )
 
-
             if (selectedOption == ShowTimeInputOption.SHOW) {
+                 selectedOption2 = ShowTimeInputOption2.HIDE
+
                 val mContext = LocalContext.current
 
                 // Declaring and initializing a calendar
@@ -257,112 +260,109 @@ fun MixRoutineInputForm(
                     Text(text = "Select a time to turn on/off", color = Color.White)
                 }
 
-                // Add a spacer of 75dp
-                Spacer(modifier = Modifier.size(75.dp))
+                // Add a spacer of 50dp
+                Spacer(modifier = Modifier.size(50.dp))
 
                 // Display selected time
                 Text(text = "Selected Time: ${mTime.value}", fontSize = 14.sp)
-            }
 
-            var selectedOption2 by remember { mutableStateOf(ShowTimeInputOption2.SHOW) }
-
-            //Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Show Timer Input")
-
-            //Row(modifier = Modifier.padding(start = 8.dp)) {
-            RadioButton(
-                selected = selectedOption2 == ShowTimeInputOption2.SHOW,
-                onClick = { selectedOption2 = ShowTimeInputOption2.SHOW }
-            )
-            //Text(text = "Show")
-            Text(text = "Hide", modifier = Modifier.padding(start = 16.dp))
-            RadioButton(
-                selected = selectedOption2 == ShowTimeInputOption2.HIDE,
-                onClick = { selectedOption2 = ShowTimeInputOption2.HIDE }
-            )
+                //////////////////////////////
 
 
-            if (selectedOption2 == ShowTimeInputOption2.SHOW) {
-                // Fetching local context
-                // Fetching local context
-                val mContext = LocalContext.current
-
-// Declaring and initializing a calendar
-                val mCalendar = Calendar.getInstance()
-                val mStartHour = mCalendar[Calendar.HOUR_OF_DAY]
-                val mStartMinute = mCalendar[Calendar.MINUTE]
-                val mEndHour = mCalendar[Calendar.HOUR_OF_DAY]
-                val mEndMinute = mCalendar[Calendar.MINUTE]
-
-// Creating mutable states to hold the selected times
-                val mStartTime = remember { mutableStateOf("") }
-                val mEndTime = remember { mutableStateOf("") }
-
-
-// Creating TimePicker dialogs for start and end times
-                val mStartTimePickerDialog = TimePickerDialog(
-                    mContext,
-                    { _, mHour: Int, mMinute: Int ->
-                        val selectedTime = "$mHour:$mMinute"
-                        mStartTime.value = selectedTime
-                        mixRoutineDetails.copy(startTime = selectedTime)// Update the start time value in your repository
-                    }, mStartHour, mStartMinute, false
+                } else {
+                    // Hide timer input
+                Text(text = "Set after a certain amount of time")
+                RadioButton(
+                    selected = selectedOption2 == ShowTimeInputOption2.SHOW && selectedOption == ShowTimeInputOption.HIDE,
+                    onClick = { selectedOption2 = ShowTimeInputOption2.SHOW }
+                )
+                Text(text = "Hide", modifier = Modifier.padding(start = 10.dp))
+                RadioButton(
+                    selected = selectedOption2 == ShowTimeInputOption2.HIDE && selectedOption == ShowTimeInputOption.HIDE,
+                    onClick = { selectedOption2 = ShowTimeInputOption2.HIDE }
                 )
 
-                val mEndTimePickerDialog = TimePickerDialog(
-                    mContext,
-                    { _, mHour: Int, mMinute: Int ->
-                        val selectedTime = "$mHour:$mMinute"
-                        mEndTime.value = selectedTime
-                        mixRoutineDetails.copy(endTime = selectedTime) // Update the end time value in your repository
-                    }, mEndHour, mEndMinute, false
-                )
+                if (selectedOption2 == ShowTimeInputOption2.SHOW) {
+                    // Fetching local context
+                    // Fetching local context
+                    val mContext = LocalContext.current
 
-                Button(
-                    onClick = { mStartTimePickerDialog.show() },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))
-                ) {
-                    Text(text = "Select Start Time", color = Color.White)
-                }
+                    // Declaring and initializing a calendar
+                    val mCalendar = Calendar.getInstance()
+                    val mStartHour = mCalendar[Calendar.HOUR_OF_DAY]
+                    val mStartMinute = mCalendar[Calendar.MINUTE]
+                    val mEndHour = mCalendar[Calendar.HOUR_OF_DAY]
+                    val mEndMinute = mCalendar[Calendar.MINUTE]
 
-                // Add a spacer of 20dp
-                Spacer(modifier = Modifier.size(20.dp))
+                    // Creating mutable states to hold the selected times
+                    val mStartTime = remember { mutableStateOf("") }
+                    val mEndTime = remember { mutableStateOf("") }
 
-                // On button click, end time picker is displayed
-                Button(
-                    onClick = { mEndTimePickerDialog.show() },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))
-                ) {
-                    Text(text = "Select End Time", color = Color.White)
-                }
+                    // Creating TimePicker dialogs for start and end times
+                    val mStartTimePickerDialog = TimePickerDialog(
+                        mContext,
+                        { _, mHour: Int, mMinute: Int ->
+                            val selectedTime = "$mHour:$mMinute"
+                            mStartTime.value = selectedTime
+                            mixRoutineDetails.copy(startTime = selectedTime)// Update the start time value in your repository
+                        }, mStartHour, mStartMinute, false
+                    )
 
-                // Add a spacer of 100dp
-                Spacer(modifier = Modifier.size(100.dp))
+                    val mEndTimePickerDialog = TimePickerDialog(
+                        mContext,
+                        { _, mHour: Int, mMinute: Int ->
+                            val selectedTime = "$mHour:$mMinute"
+                            mEndTime.value = selectedTime
+                            mixRoutineDetails.copy(endTime = selectedTime) // Update the end time value in your repository
+                        }, mEndHour, mEndMinute, false
+                    )
 
-                // Display selected start and end times
-                Text(text = "Selected Start Time: ${mStartTime.value}", fontSize = 14.sp)
-                Text(text = "Selected End Time: ${mEndTime.value}", fontSize = 14.sp)
-
-                // Function to calculate duration of selected period
-                fun calculateDuration(startTime: String, endTime: String): String {
-                    if (startTime.isBlank() || endTime.isBlank()) {
-                        return "Please select start and end times"
+                    Button(
+                        onClick = { mStartTimePickerDialog.show() },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))
+                    ) {
+                        Text(text = "Select Start Time", color = Color.White)
                     }
 
-                    try {
-                        val start = LocalTime.parse(startTime)
-                        val end = LocalTime.parse(endTime)
-                        val duration = Duration.between(start, end)
-                        val hours = duration.toHours()
-                        val minutes = duration.toMinutes() % 60
-                        return String.format("%d hours %d minutes", hours, minutes)
-                    } catch (e: DateTimeParseException) {
-                        return "Invalid time format"
-                    }
-                }
+                    // Add a spacer of 20dp
+                    Spacer(modifier = Modifier.size(20.dp))
 
-                val duration = calculateDuration(mStartTime.value, mEndTime.value)
-                mixRoutineDetails.copy(duration = duration)
+                    // On button click, end time picker is displayed
+                    Button(
+                        onClick = { mEndTimePickerDialog.show() },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))
+                    ) {
+                        Text(text = "Select End Time", color = Color.White)
+                    }
+
+                    // Add a spacer of 100dp
+                    Spacer(modifier = Modifier.size(100.dp))
+
+                    // Display selected start and end times
+                    Text(text = "Selected Start Time: ${mStartTime.value}", fontSize = 14.sp)
+                    Text(text = "Selected End Time: ${mEndTime.value}", fontSize = 14.sp)
+
+                    // Function to calculate duration of selected period
+                    fun calculateDuration(startTime: String, endTime: String): String {
+                        if (startTime.isBlank() || endTime.isBlank()) {
+                            return "Please select start and end times"
+                        }
+
+                        try {
+                            val start = LocalTime.parse(startTime)
+                            val end = LocalTime.parse(endTime)
+                            val duration = Duration.between(start, end)
+                            val hours = duration.toHours()
+                            val minutes = duration.toMinutes() % 60
+                            return String.format("%d hours %d minutes", hours, minutes)
+                        } catch (e: DateTimeParseException) {
+                            return "Invalid time format"
+                        }
+                    }
+
+                    val duration = calculateDuration(mStartTime.value, mEndTime.value)
+                    mixRoutineDetails.copy(duration = duration)
+                }
             }
 
             Text(text = "Then turn device:")

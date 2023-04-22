@@ -80,6 +80,5 @@ class TimerRoutineDetailsViewModel(
  * UI state for TimerRoutineDetailsScreen
  */
 data class TimerRoutineDetailsUiState(
-    //val outOfStock: Boolean = true,
     val timerRoutineDetails: TimerRoutineDetails = TimerRoutineDetails()
 )

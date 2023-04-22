@@ -32,12 +32,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
+import com.example.inventory.data.RoutinesRepository
+import com.example.inventory.data.TimerRoutine
 import com.example.inventory.ui.AppViewModelProvider
 import com.example.inventory.ui.navigation.NavigationDestination
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalTime
 import java.time.LocalTime.parse
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.*
 
@@ -175,22 +178,7 @@ fun TimerRoutineInputForm(
                 }
             }
         }
-        /*This needs to be changed to reflect a real amount of time. i.e. If a user inputs x hours and x minutes,
-        there needs to be logic to convert this value for something to trigger the lambda function*/
 
-//        OutlinedTextField(
-//            value = timerRoutineDetails.time,
-//            onValueChange = { onTimerRoutineValueChange(timerRoutineDetails.copy(time = it)) },
-//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-//            label = { Text(stringResource(R.string.timer_routine_time_req)) },
-//            leadingIcon = { Text(Currency.getInstance(Locale.getDefault()).symbol) },
-//            modifier = Modifier.fillMaxWidth(),
-//            enabled = enabled,
-//            singleLine = true
-//        )
-        // Assuming you have a repository class with a variable named 'timerRoutineDetails'
-
-        // Assuming you have a repository class with a variable named 'timerRoutineDetails'
 
 // Fetching local context
         val mContext = LocalContext.current
@@ -203,6 +191,7 @@ fun TimerRoutineInputForm(
         val mEndMinute = mCalendar[Calendar.MINUTE]
 
 // Creating mutable states to hold the selected times
+
         val mStartTime = remember { mutableStateOf("") }
         val mEndTime = remember { mutableStateOf("") }
 
@@ -211,9 +200,10 @@ fun TimerRoutineInputForm(
         val mStartTimePickerDialog = TimePickerDialog(
             mContext,
             { _, mHour: Int, mMinute: Int ->
-                val selectedTime = "$mHour:$mMinute"
+                val selectedTime = String.format("%02d:%02d", mHour, mMinute)
                 mStartTime.value = selectedTime
-                timerRoutineDetails.copy(startTime = selectedTime )// Update the start time value in your repository
+                onTimerRoutineValueChange(timerRoutineDetails.copy(startTime = selectedTime ))
+            // Update the start time value in your repository
             }, mStartHour, mStartMinute, false
         )
 
@@ -222,16 +212,11 @@ fun TimerRoutineInputForm(
             { _, mHour: Int, mMinute: Int ->
                 val selectedTime = "$mHour:$mMinute"
                 mEndTime.value = selectedTime
-                timerRoutineDetails.copy(endTime = selectedTime) // Update the end time value in your repository
+                onTimerRoutineValueChange(timerRoutineDetails.copy(endTime = selectedTime)) // Update the end time value in your repository
             }, mEndHour, mEndMinute, false
         )
 
-        /*Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {*/
-            // On button click, start time picker is displayed
+
             Button(
                 onClick = { mStartTimePickerDialog.show() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))
@@ -264,8 +249,8 @@ fun TimerRoutineInputForm(
                 }
 
                 try {
-                    val start = LocalTime.parse(startTime)
-                    val end = LocalTime.parse(endTime)
+                    val start = LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HH:mm"))
+                    val end = LocalTime.parse(endTime, DateTimeFormatter.ofPattern("HH:mm"))
                     val duration = Duration.between(start, end)
                     val hours = duration.toHours()
                     val minutes = duration.toMinutes() % 60
@@ -275,42 +260,7 @@ fun TimerRoutineInputForm(
                 }
             }
             val duration = calculateDuration(mStartTime.value, mEndTime.value)
-            timerRoutineDetails.copy(duration = duration)
-            // Calculate and display duration of selected period
-            /*timerRoutineDetails.copy(duration = calculateDuration(mStartTime.value, mEndTime.value))*/
-            //Text(text = "Selected Period Duration: ${timerRoutineDetails.duration}", fontSize = 30.sp)
-       // }
+        onTimerRoutineValueChange(timerRoutineDetails.copy(duration = duration))
 
-
-
-
-//        OutlinedTextField(
-//            value = timerRoutineDetails.status,
-//            onValueChange = { onValueChange(timerRoutineDetails.copy(status = it)) },
-//           //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-//            label = { Text(stringResource(R.string.status_req)) },
-//            modifier = Modifier.fillMaxWidth(),
-//            enabled = enabled,
-//            singleLine = true
-//        )
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//private fun TimerRoutineEntryScreenPreview() {
-//    InventoryTheme {
-//        TimerRoutineEntryBody(
-//            timerRoutineUiState = TimerRoutineUiState(
-//                TimerRoutineDetails(
-//                    name = "TimerRoutine name",
-//                    price = "10.00",
-//                    quantity = "5"
-//                )
-//            ),
-//            onTimerRoutineValueChange = {},
-//            onSaveClick = {}
-//        )
-//    }
-//}

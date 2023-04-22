@@ -72,7 +72,7 @@ class TimerRoutineEditViewModel(
 
     private fun validateInput(uiState: TimerRoutineDetails = timerRoutineUiState.timerRoutineDetails): Boolean {
         return with(uiState) {
-            name.isNotBlank() && startTime.isNotBlank() && endTime.isNotBlank()//&& status.isNotBlank()
+            name.isNotBlank()
         }
     }
 }

@@ -110,6 +110,7 @@ fun TimerRoutine.toTimerRoutineDetails(): TimerRoutineDetails = TimerRoutineDeta
     name = name,
     startTime = startTime.toString(),
     endTime = endTime.toString(),
+    duration = duration,
     status = status
 )
 

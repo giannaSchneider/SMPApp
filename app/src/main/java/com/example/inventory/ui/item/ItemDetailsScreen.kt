@@ -67,8 +67,6 @@ fun ItemDetailsScreen(
     navigateToMultiRoutineUpdate: (Int) -> Unit,
     navigateToMixRoutineUpdate: (Int) -> Unit,
 
-
-
     modifier: Modifier = Modifier,
     viewModel: ItemDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {

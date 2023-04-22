@@ -16,11 +16,7 @@
 
 package com.example.inventory.ui.routines
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
@@ -43,8 +39,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
@@ -95,12 +93,6 @@ fun MixRoutineDetailsScreen(
         },
     ) { innerPadding ->
         MixRoutineDetailsBody(
-            /*mixRoutineUiState = viewModel.mixRoutineUiState,
-            onRoutineValueChange = viewModel::updateUiState,
-            onTimeSet = {coroutineScope.launch {
-                viewModel.saveRoutine()
-                navigateBack()
-            }*/
 
             mixRoutineDetailsUiState = uiState.value,
             //onSellMixRoutine = { viewModel.reduceQuantityByOne() },
@@ -123,7 +115,6 @@ fun MixRoutineDetailsScreen(
 @Composable
 private fun MixRoutineDetailsBody(
     mixRoutineDetailsUiState: MixRoutineDetailsUiState,
-    //onSellMixRoutine: () -> Unit,
     //itemsRepository: ItemsRepository,
     //onItemSelected: (Item) -> Unit,
     viewModel: MixRoutineEntryViewModel = viewModel(factory = AppViewModelProvider.Factory),
@@ -139,21 +130,24 @@ private fun MixRoutineDetailsBody(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
-        MixRoutineInputForm(mixRoutineDetails = mixRoutineDetailsUiState.mixRoutineDetails, enabled = false, itemsRepository = viewModel.itemsRepository, onItemSelected = {})
-        /*Button(
-            onClick = onSellMixRoutine,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !mixRoutineDetailsUiState.outOfStock
-        ) {
-            Text(stringResource(R.string.sell))
-        }*/
-        /*Button(
-            onClick = onAddMixRoutine,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = true
-        ) {
-            Text(stringResource(R.string.add_mix_routine))
-        }*/
+        //MixRoutineInputForm(mixRoutineDetails = mixRoutineDetailsUiState.mixRoutineDetails, enabled = false, itemsRepository = viewModel.itemsRepository, onItemSelected = {})
+        Text(
+            text = "Routine ID: ${mixRoutineDetailsUiState.mixRoutineDetails.id}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Name: ${mixRoutineDetailsUiState.mixRoutineDetails.name}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Status: ${mixRoutineDetailsUiState.mixRoutineDetails.status}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
             modifier = Modifier.fillMaxWidth()

@@ -146,7 +146,7 @@ fun ClockRoutineInputForm(
             { _, mHour: Int, mMinute: Int ->
                 val selectedTime = "$mHour:$mMinute"
                 mTime.value = selectedTime
-                clockRoutineDetails.copy(time = selectedTime) // Update the time value in your repository
+                onClockRoutineValueChange(clockRoutineDetails.copy(time = selectedTime)) // Update the time value in your repository
             }, mHour, mMinute, false
         )
 
@@ -209,32 +209,8 @@ fun ClockRoutineInputForm(
             }
         }
 
-//        OutlinedTextField(
-//            value = clockRoutineDetails.status,
-//            onValueChange = { onValueChange(clockRoutineDetails.copy(status = it)) },
-//           //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-//            label = { Text(stringResource(R.string.status_req)) },
-//            modifier = Modifier.fillMaxWidth(),
-//            enabled = enabled,
-//            singleLine = true
-//        )
+
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//private fun ClockRoutineEntryScreenPreview() {
-//    InventoryTheme {
-//        ClockRoutineEntryBody(
-//            clockRoutineUiState = ClockRoutineUiState(
-//                ClockRoutineDetails(
-//                    name = "ClockRoutine name",
-//                    price = "10.00",
-//                    quantity = "5"
-//                )
-//            ),
-//            onClockRoutineValueChange = {},
-//            onSaveClick = {}
-//        )
-//    }
-//}
+
