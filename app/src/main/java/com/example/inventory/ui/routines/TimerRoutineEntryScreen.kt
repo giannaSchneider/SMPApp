@@ -26,15 +26,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.Typeface
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
+import com.example.inventory.data.Item
+import com.example.inventory.data.ItemsRepository
 import com.example.inventory.data.RoutinesRepository
 import com.example.inventory.data.TimerRoutine
 import com.example.inventory.ui.AppViewModelProvider
+import com.example.inventory.ui.item.ItemDetailsViewModel
 import com.example.inventory.ui.navigation.NavigationDestination
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -49,23 +55,14 @@ object TimerRoutineEntryDestination : NavigationDestination {
     override val titleRes = R.string.timer_routine_entry_title
 }
 
-//// Function to calculate duration of selected period
-//fun calculateDuration(startTime: String, endTime: String): String {
-//    val start = parse(startTime)
-//    val end = parse(endTime)
-//    val duration = Duration.between(start, end)
-//    val hours = duration.toHours()
-//    val minutes = duration.toMinutes() % 60
-//    return String.format("%d hours %d minutes", hours, minutes)
-//}
-
 @Composable
 fun TimerRoutineEntryScreen(
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     canNavigateBack: Boolean = true,
-    viewModel: TimerRoutineEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: TimerRoutineEntryViewModel = viewModel(factory = AppViewModelProvider.Factory),
+
 ) {
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
@@ -99,6 +96,7 @@ fun TimerRoutineEntryScreen(
 fun TimerRoutineEntryBody(
     timerRoutineUiState: TimerRoutineUiState,
     onTimerRoutineValueChange: (TimerRoutineDetails) -> Unit,
+    viewModel: MixRoutineEntryViewModel = viewModel(factory = AppViewModelProvider.Factory),
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -108,7 +106,7 @@ fun TimerRoutineEntryBody(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        TimerRoutineInputForm(timerRoutineDetails = timerRoutineUiState.timerRoutineDetails, onTimerRoutineValueChange = onTimerRoutineValueChange)
+        TimerRoutineInputForm(timerRoutineDetails = timerRoutineUiState.timerRoutineDetails, onTimerRoutineValueChange = onTimerRoutineValueChange, itemsRepository = viewModel.itemsRepository, onItemSelected = {})
         Button(
             onClick = onSaveClick,
             enabled = timerRoutineUiState.isEntryValid,
@@ -125,9 +123,18 @@ fun TimerRoutineInputForm(
     timerRoutineDetails: TimerRoutineDetails,
     modifier: Modifier = Modifier,
     onTimerRoutineValueChange: (TimerRoutineDetails) -> Unit = {},
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    itemsRepository: ItemsRepository,
+    onItemSelected: (Item) -> Unit,
 ) {
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+
+    Column(modifier = modifier.fillMaxWidth() .padding(20.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+
+        Text(
+            text = "Name this routine:",
+            fontStyle = FontStyle.Italic,
+            fontSize = 16.sp
+        )
         OutlinedTextField(
             value = timerRoutineDetails.name,
             onValueChange = { onTimerRoutineValueChange(timerRoutineDetails.copy(name = it)) },
@@ -136,6 +143,51 @@ fun TimerRoutineInputForm(
             enabled = enabled,
             singleLine = true
         )
+
+        /////////////////////////////////Device Selection/////////////////////////////////////////////////////
+        var items = itemsRepository.getAllItemsStream().collectAsState(emptyList())
+
+        var expanded3 by remember { mutableStateOf(false) }
+        var selectedOption3 by remember { mutableStateOf<Item?>(null) }
+
+        ExposedDropdownMenuBox(
+            expanded = expanded3,
+            onExpandedChange = { expanded3 = !expanded3 }
+        ) {
+            TextField(
+                readOnly = true,
+                value = selectedOption3?.name ?: "",
+                onValueChange = { },
+                label = { Text("Select Device") },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded3)
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded3,
+                onDismissRequest = { expanded3 = false }
+            ) {
+                items.value.forEach { item ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedOption3 = item
+                            expanded3 = false
+                            onItemSelected(item)
+                            onTimerRoutineValueChange(timerRoutineDetails.copy(deviceId = item.name))
+                        }
+                    ) {
+                        Text(text = item.name)
+                    }
+                }
+
+            }
+        }
+
+       // Spacer(modifier = Modifier.size(15.dp))
+
+        ////////////////////////END OF DEVICE SELECTION/////////////////
 
         val options = listOf("On", "Off")
         var expanded by remember { mutableStateOf(false) }
@@ -179,6 +231,8 @@ fun TimerRoutineInputForm(
             }
         }
 
+      //  Spacer(modifier = Modifier.size(10.dp))
+
 
 // Fetching local context
         val mContext = LocalContext.current
@@ -210,37 +264,36 @@ fun TimerRoutineInputForm(
         val mEndTimePickerDialog = TimePickerDialog(
             mContext,
             { _, mHour: Int, mMinute: Int ->
-                val selectedTime = "$mHour:$mMinute"
+                val selectedTime = String.format("%02d:%02d", mHour, mMinute)
                 mEndTime.value = selectedTime
                 onTimerRoutineValueChange(timerRoutineDetails.copy(endTime = selectedTime)) // Update the end time value in your repository
             }, mEndHour, mEndMinute, false
         )
 
-
             Button(
                 onClick = { mStartTimePickerDialog.show() },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF117A65))
             ) {
                 Text(text = "Select Start Time", color = Color.White)
             }
 
-            // Add a spacer of 20dp
-            Spacer(modifier = Modifier.size(20.dp))
+
+          //  Spacer(modifier = Modifier.size(5.dp))
 
             // On button click, end time picker is displayed
             Button(
                 onClick = { mEndTimePickerDialog.show() },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF117A65))
             ) {
                 Text(text = "Select End Time", color = Color.White)
             }
 
-            // Add a spacer of 100dp
-            Spacer(modifier = Modifier.size(100.dp))
+
+            Spacer(modifier = Modifier.size(20.dp))
 
             // Display selected start and end times
-            Text(text = "Selected Start Time: ${mStartTime.value}", fontSize = 14.sp)
-            Text(text = "Selected End Time: ${mEndTime.value}", fontSize = 14.sp)
+            Text(text = "Selected Start Time: ${mStartTime.value}", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(text = "Selected End Time: ${mEndTime.value}", fontWeight = FontWeight.Bold, fontSize = 18.sp)
 
             // Function to calculate duration of selected period
             fun calculateDuration(startTime: String, endTime: String): String {

@@ -22,11 +22,16 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
+import com.example.inventory.data.Item
+import com.example.inventory.data.ItemsRepository
 import com.example.inventory.ui.AppViewModelProvider
 import com.example.inventory.ui.item.ItemInputForm
 import com.example.inventory.ui.navigation.NavigationDestination
@@ -83,6 +88,7 @@ fun MultiRoutineEntryScreen(
 fun MultiRoutineEntryBody(
     multiRoutineUiState: MultiRoutineUiState,
     onMultiRoutineValueChange: (MultiRoutineDetails) -> Unit,
+    viewModel: MixRoutineEntryViewModel = viewModel(factory = AppViewModelProvider.Factory),
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -92,7 +98,7 @@ fun MultiRoutineEntryBody(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        MultiRoutineInputForm(multiRoutineDetails = multiRoutineUiState.multiRoutineDetails, onMultiRoutineValueChange = onMultiRoutineValueChange)
+        MultiRoutineInputForm(multiRoutineDetails = multiRoutineUiState.multiRoutineDetails, onMultiRoutineValueChange = onMultiRoutineValueChange, itemsRepository = viewModel.itemsRepository, onItemSelected = {})
         Button(
             onClick = onSaveClick,
             enabled = multiRoutineUiState.isEntryValid,
@@ -109,10 +115,17 @@ fun MultiRoutineInputForm(
     multiRoutineDetails: MultiRoutineDetails,
     modifier: Modifier = Modifier,
     onMultiRoutineValueChange: (MultiRoutineDetails) -> Unit = {},
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    itemsRepository: ItemsRepository,
+    onItemSelected: (Item) -> Unit,
 ) {
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(modifier = modifier.fillMaxWidth() .padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
+        Text(
+            text = "Name this routine:",
+            fontStyle = FontStyle.Italic,
+            fontSize = 16.sp
+        )
         OutlinedTextField(
             value = multiRoutineDetails.name,
             onValueChange = { onMultiRoutineValueChange(multiRoutineDetails.copy(name = it)) },
@@ -121,70 +134,58 @@ fun MultiRoutineInputForm(
             enabled = enabled,
             singleLine = true
         )
-        /*OutlinedTextField(
-            value = multiRoutineDetails.time,
-            onValueChange = { onMultiRoutineValueChange(multiRoutineDetails.copy(time = it)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            label = { Text(stringResource(R.string.multi_routine_time_req)) },
-            leadingIcon = { Text(Currency.getInstance(Locale.getDefault()).symbol) },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )*/
-        Text(text = "If this device is ")
-        val options = listOf("On", "Off")
-        var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember { mutableStateOf(options[0]) }
+
+        /////////////////////////////////Device Selection/////////////////////////////////////////////////////
+        var items = itemsRepository.getAllItemsStream().collectAsState(emptyList())
+
+        var expanded3 by remember { mutableStateOf(false) }
+        var selectedOption3 by remember { mutableStateOf<Item?>(null) }
 
         ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+            expanded = expanded3,
+            onExpandedChange = { expanded3 = !expanded3 }
         ) {
             TextField(
                 readOnly = true,
-                value = selectedOptionText,
+                value = selectedOption3?.name ?: "",
                 onValueChange = { },
-                label = { Text("Set Status") },
+                label = { Text("Select Device") },
                 trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(
-                        expanded = expanded
-                    )
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded3)
                 },
                 colors = ExposedDropdownMenuDefaults.textFieldColors()
             )
+
             ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = {
-                    expanded = false
-                }
+                expanded = expanded3,
+                onDismissRequest = { expanded3 = false }
             ) {
-                options.forEach { selectionOption ->
+                items.value.forEach { item ->
                     DropdownMenuItem(
                         onClick = {
-                            selectedOptionText = selectionOption
-                            expanded = false
-                            onMultiRoutineValueChange(multiRoutineDetails.copy(status = selectedOptionText))
+                            selectedOption3 = item
+                            expanded3 = false
+                            onItemSelected(item)
+                            onMultiRoutineValueChange(multiRoutineDetails.copy(deviceId = item.name))
                         }
-                    ){
-                        Text(text = selectionOption)
+                    ) {
+                        Text(text = item.name)
                     }
                 }
+
             }
         }
-//////////////////////////////////////////////DEVICE 2////////////////////////////////////////////////////
-        Text(text = "Then turn:")
-        OutlinedTextField(
-            value = multiRoutineDetails.name2,
-            onValueChange = { onMultiRoutineValueChange(multiRoutineDetails.copy(name2 = it)) },
-            label = { Text(stringResource(R.string.multi_device_name_req)) },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
 
+        ////////////////////////END OF DEVICE SELECTION/////////////////
 
+        Text(text = "If this device is ",
+            fontStyle = FontStyle.Italic,
+            fontSize = 16.sp
+            )
+
+        val options = listOf("On", "Off")
+        var expanded by remember { mutableStateOf(false) }
+        var selectedOptionText by remember { mutableStateOf(options[0]) }
 
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -215,7 +216,7 @@ fun MultiRoutineInputForm(
                         onClick = {
                             selectedOptionText = selectionOption
                             expanded = false
-                            onMultiRoutineValueChange(multiRoutineDetails.copy(status2 = selectedOptionText))
+                            onMultiRoutineValueChange(multiRoutineDetails.copy(status = selectedOptionText))
                         }
                     ){
                         Text(text = selectionOption)
@@ -223,33 +224,92 @@ fun MultiRoutineInputForm(
                 }
             }
         }
+//////////////////////////////////////////////DEVICE 2////////////////////////////////////////////////////
+        Text(text = "Then turn:",
+            fontStyle = FontStyle.Italic,
+            fontSize = 16.sp)
 
-//        OutlinedTextField(
-//            value = multiRoutineDetails.status,
-//            onValueChange = { onValueChange(multiRoutineDetails.copy(status = it)) },
-//           //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-//            label = { Text(stringResource(R.string.status_req)) },
-//            modifier = Modifier.fillMaxWidth(),
-//            enabled = enabled,
-//            singleLine = true
-//        )
+        /////////////////////////////////Device Selection/////////////////////////////////////////////////////
+        var items2 = itemsRepository.getAllItemsStream().collectAsState(emptyList())
+
+        var expanded4 by remember { mutableStateOf(false) }
+        var selectedOption4 by remember { mutableStateOf<Item?>(null) }
+
+        ExposedDropdownMenuBox(
+            expanded = expanded4,
+            onExpandedChange = { expanded4 = !expanded4 }
+        ) {
+            TextField(
+                readOnly = true,
+                value = selectedOption4?.name ?: "",
+                onValueChange = { },
+                label = { Text("Select Device") },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded4)
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded4,
+                onDismissRequest = { expanded4 = false }
+            ) {
+                items2.value.forEach { item2 ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedOption4 = item2
+                            expanded4 = false
+                            onItemSelected(item2)
+                            onMultiRoutineValueChange(multiRoutineDetails.copy(deviceId2 = item2.name))
+                        }
+                    ) {
+                        Text(text = item2.name)
+                    }
+                }
+
+            }
+        }
+
+        ////////////////////////END OF DEVICE SELECTION/////////////////
+
+        var expanded2 by remember { mutableStateOf(false) }
+        var selectedOptionText2 by remember { mutableStateOf(options[0]) }
+        ExposedDropdownMenuBox(
+            expanded = expanded2,
+            onExpandedChange = {
+                expanded2 = !expanded2
+            }
+        ) {
+            TextField(
+                readOnly = true,
+                value = selectedOptionText2,
+                onValueChange = { },
+                label = { Text("Set Device On or Off") },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = expanded2
+                    )
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
+            )
+            ExposedDropdownMenu(
+                expanded = expanded2,
+                onDismissRequest = {
+                    expanded2 = false
+                }
+            ) {
+                options.forEach { selectionOption2 ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedOptionText2 = selectionOption2
+                            expanded2 = false
+                            onMultiRoutineValueChange(multiRoutineDetails.copy(status2 = selectedOptionText2))
+                        }
+                    ){
+                        Text(text = selectionOption2)
+                    }
+                }
+            }
+        }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//private fun MultiRoutineEntryScreenPreview() {
-//    InventoryTheme {
-//        MultiRoutineEntryBody(
-//            multiRoutineUiState = MultiRoutineUiState(
-//                MultiRoutineDetails(
-//                    name = "MultiRoutine name",
-//                    price = "10.00",
-//                    quantity = "5"
-//                )
-//            ),
-//            onMultiRoutineValueChange = {},
-//            onSaveClick = {}
-//        )
-//    }
-//}

@@ -21,13 +21,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.inventory.data.Item
+import com.example.inventory.data.ItemsRepository
 import com.example.inventory.data.TimerRoutine
 import com.example.inventory.data.RoutinesRepository
 
 /**
  * View Model to validate and insert items in the Room database.
  */
-class TimerRoutineEntryViewModel(private val routinesRepository: RoutinesRepository) : ViewModel() {
+class TimerRoutineEntryViewModel(private val routinesRepository: RoutinesRepository, val itemsRepository: ItemsRepository) : ViewModel() {
 
     /**
      * Holds current item ui state
@@ -50,6 +51,7 @@ class TimerRoutineEntryViewModel(private val routinesRepository: RoutinesReposit
     suspend fun saveTimerRoutine() {
         if (validateInput()) {
             routinesRepository.insertTimerRoutine(timerRoutineUiState.timerRoutineDetails.toTimerRoutine())
+
         }
     }
 
@@ -106,8 +108,8 @@ fun TimerRoutine.toTimerRoutineUiState(isEntryValid: Boolean = false): TimerRout
  */
 fun TimerRoutine.toTimerRoutineDetails(): TimerRoutineDetails = TimerRoutineDetails(
     id = id,
-    //deviceId = deviceId,
     name = name,
+    deviceId = deviceId,
     startTime = startTime.toString(),
     endTime = endTime.toString(),
     duration = duration,

@@ -23,11 +23,12 @@ import androidx.lifecycle.ViewModel
 import com.example.inventory.data.Item
 import com.example.inventory.data.ClockRoutine
 import com.example.inventory.data.ClockRoutineRepository
+import com.example.inventory.data.ItemsRepository
 
 /**
  * View Model to validate and insert items in the Room database.
  */
-class ClockRoutineEntryViewModel(private val clockRoutineRepository: ClockRoutineRepository) : ViewModel() {
+class ClockRoutineEntryViewModel(private val clockRoutineRepository: ClockRoutineRepository, val itemsRepository: ItemsRepository) : ViewModel() {
 
     /**
      * Holds current item ui state
@@ -85,7 +86,7 @@ fun ClockRoutineDetails.toClockRoutine(): ClockRoutine = ClockRoutine(
     id = id,
     deviceId = deviceId,
     name = name,
-    time = time.toDoubleOrNull() ?: 0.0,
+    time = time,//.toDoubleOrNull() ?: 0.0,
     status = status//.toBooleanStrictOrNull()
 )
 
@@ -102,8 +103,9 @@ fun ClockRoutine.toClockRoutineUiState(isEntryValid: Boolean = false): ClockRout
  */
 fun ClockRoutine.toClockRoutineDetails(): ClockRoutineDetails = ClockRoutineDetails(
     id = id,
+    deviceId = deviceId,
     name = name,
-    time = time.toString(),
+    time = time,//.toString(),
     status = status
 )
 

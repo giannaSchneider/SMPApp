@@ -139,6 +139,12 @@ private fun TimerRoutineDetailsBody(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
+            text = "Device Name: ${timerRoutineDetailsUiState.timerRoutineDetails.deviceId}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
             text = "Name: ${timerRoutineDetailsUiState.timerRoutineDetails.name}",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold

@@ -33,11 +33,10 @@ This routine allows the user to turn a device on or off after another device has
 data class MultiRoutine(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val deviceId: String,
     val name: String,
+    val deviceId: String,
     val status: String,
-    val id2: Int = 0,
-    val name2: String,
+    val deviceId2: String,
     val status2: String
 )
 

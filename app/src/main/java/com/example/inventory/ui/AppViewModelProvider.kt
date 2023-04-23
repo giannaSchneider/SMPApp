@@ -68,7 +68,7 @@ object AppViewModelProvider {
 
         // Initializer for TimerRoutineEntryViewModel
         initializer {
-            TimerRoutineEntryViewModel(inventoryApplication().container.routinesRepository)
+            TimerRoutineEntryViewModel(inventoryApplication().container.routinesRepository,inventoryApplication().container.itemsRepository)
         }
 
         initializer {
@@ -87,7 +87,7 @@ object AppViewModelProvider {
 
         ///////////////////////////////////Clock Routine///////////////////////////
         initializer {
-            ClockRoutineEntryViewModel(inventoryApplication().container.clockRoutineRepository)
+            ClockRoutineEntryViewModel(inventoryApplication().container.clockRoutineRepository, inventoryApplication().container.itemsRepository)
         }
         initializer {
             ClockRoutineEditViewModel(
@@ -106,7 +106,7 @@ object AppViewModelProvider {
 
         //////////////////////////Multi Routine/////////////////////////
         initializer {
-            MultiRoutineEntryViewModel(inventoryApplication().container.multiRoutineRepository)
+            MultiRoutineEntryViewModel(inventoryApplication().container.multiRoutineRepository, inventoryApplication().container.itemsRepository)
         }
         initializer {
             MultiRoutineEditViewModel(

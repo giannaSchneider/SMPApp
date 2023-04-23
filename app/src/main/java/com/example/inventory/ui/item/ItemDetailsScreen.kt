@@ -115,17 +115,8 @@ fun ItemDetailsScreen(
             onMixRoutineClick = navigateToMixRoutineUpdate,
 
 
-           /* onViewTimerRoutine = {navigateToTimerRoutineDetails()},
-            onViewClockRoutine = {navigateToClockRoutineDetails()},
-            onViewMultiRoutine = {navigateToMultiRoutineDetails()},
-            onViewMixRoutine = {navigateToMixRoutineDetails()},*/
-
-
             onDelete = {
-                // Note: If the user rotates the screen very fast, the operation may get cancelled
-                // and the item may not be deleted from the Database. This is because when config
-                // change occurs, the Activity will be recreated and the rememberCoroutineScope will
-                // be cancelled - since the scope is bound to composition.
+
                 coroutineScope.launch {
                     viewModel.deleteItem()
                     navigateBack()
@@ -142,6 +133,7 @@ private fun ItemDetailsBody(
     onSellItem: () -> Unit,
     onAddARoutine: () -> Unit,
 
+
     timerRoutineList: List<TimerRoutine>,
     onTimerRoutineClick: (Int) -> Unit,
 
@@ -154,13 +146,10 @@ private fun ItemDetailsBody(
     mixRoutineList: List<MixRoutine>,
     onMixRoutineClick: (Int) -> Unit,
 
-    /*onViewTimerRoutine: () -> Unit,
-    onViewClockRoutine: () -> Unit,
-    onViewMultiRoutine: () -> Unit,
-    onViewMixRoutine: () -> Unit,*/
-    //onAddItem: () -> Unit,
     onDelete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+
+
 ) {
         Column(
             modifier = modifier
@@ -169,6 +158,7 @@ private fun ItemDetailsBody(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
+            var routineAlreadyMade: Boolean = false
 
             ItemInputForm(itemDetails = itemDetailsUiState.itemDetails, enabled = false)
             Button(
@@ -194,87 +184,52 @@ private fun ItemDetailsBody(
                     onDeleteCancel = { deleteConfirmationRequired = false }
                 )
             }
-            Button(
-                onClick = onAddARoutine,
-                modifier = Modifier.fillMaxWidth(),
-                enabled = true
-            ) {
-                Text(stringResource(R.string.add_a_routine))
+            val filteredList = timerRoutineList.filter { timerRoutine ->
+                itemDetailsUiState.itemDetails.name == timerRoutine.deviceId
             }
-           /* Button(
-                onClick = onAddClockRoutine,
-                modifier = Modifier.fillMaxWidth(),
-                enabled = true
-            ) {
-                Text(stringResource(R.string.add_clock_routine))
+            val filteredList2 = clockRoutineList.filter { clockRoutine ->
+                itemDetailsUiState.itemDetails.name == clockRoutine.deviceId
             }
-            Button(
-                onClick = onAddMultiRoutine,
-                modifier = Modifier.fillMaxWidth(),
-                enabled = true
-            ) {
-                Text(stringResource(R.string.add_multi_routine))
+            val filteredList3 = multiRoutineList.filter { multiRoutine ->
+                itemDetailsUiState.itemDetails.name == multiRoutine.deviceId
             }
-            Button(
-                onClick = onAddMixRoutine,
-                modifier = Modifier.fillMaxWidth(),
-                enabled = true
-            ) {
-                Text(stringResource(R.string.add_mix_routine))
-            }*/
+            val filteredList4 = mixRoutineList.filter { mixRoutine ->
+                itemDetailsUiState.itemDetails.name == mixRoutine.deviceId
+            }
 
+            if(filteredList.isEmpty() && filteredList2.isEmpty() && filteredList3.isEmpty() && filteredList4.isEmpty()) {
+                Button(
+                    onClick = onAddARoutine,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = true
+                ) {
+                    Text(stringResource(R.string.add_a_routine))
+                }
+            }
+            else {
+                Button(
+                    onClick = onAddARoutine,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = false
+                ) {
+                    Text(stringResource(R.string.add_a_routine))
+                }
 
-        /*Button(
-            onClick = onViewTimerRoutine,
-            modifier = Modifier.fillMaxWidth(),
-            //enabled = !itemDetailsUiState.outOfStock
-        ) {
-            Text(stringResource(R.string.timer_routine_details_title))
-        }
-        Button(
-            onClick = onViewClockRoutine,
-            modifier = Modifier.fillMaxWidth(),
-            //enabled = !itemDetailsUiState.outOfStock
-        ) {
-            Text(stringResource(R.string.clock_routine_details_title))
-        }
-        Button(
-            onClick = onViewMultiRoutine,
-            modifier = Modifier.fillMaxWidth(),
-            //enabled = !itemDetailsUiState.outOfStock
-        ) {
-            Text(stringResource(R.string.multi_routine_details_title))
-        }
-        Button(
-            onClick = onViewMixRoutine,
-            modifier = Modifier.fillMaxWidth(),
-            //enabled = !itemDetailsUiState.outOfStock
-        ) {
-            Text(stringResource(R.string.mix_routine_details_title))
-        }*/
-//        Button(
-//            onClick = onAddItem,
-//            modifier = Modifier.fillMaxWidth(),
-//            enabled = !itemDetailsUiState.outOfStock
-//        ) {
-//            Text(stringResource(R.string.item_entry_title))
-//        }
-
-
+            }
             Divider()
 
             TimerRoutineListHeader()
             Divider()
 
             if (timerRoutineList.isEmpty()) {
-                Text(
-                    text = ("No Timer Routines"),
-                    style = MaterialTheme.typography.subtitle2
-                )
+
             } else {
                 TimerRoutineList(
                     timerRoutineList = timerRoutineList,
-                    onTimerRoutineClick = { onTimerRoutineClick(it.id) })
+                    onTimerRoutineClick = { onTimerRoutineClick(it.id) },
+                    itemDetailsUiState = itemDetailsUiState,
+
+                )
             }
             if (clockRoutineList.isEmpty()) {
                 Text(
@@ -284,7 +239,8 @@ private fun ItemDetailsBody(
             } else {
                 ClockRoutineList(
                     clockRoutineList = clockRoutineList,
-                    onClockRoutineClick = { onClockRoutineClick(it.id) })
+                    onClockRoutineClick = { onClockRoutineClick(it.id) },
+                    itemDetailsUiState = itemDetailsUiState)
             }
             if (multiRoutineList.isEmpty()) {
                 Text(
@@ -294,7 +250,8 @@ private fun ItemDetailsBody(
             } else {
                 MultiRoutineList(
                     multiRoutineList = multiRoutineList,
-                    onMultiRoutineClick = { onMultiRoutineClick(it.id) })
+                    onMultiRoutineClick = { onMultiRoutineClick(it.id) },
+                    itemDetailsUiState = itemDetailsUiState)
             }
             if (mixRoutineList.isEmpty()) {
                 Text(
@@ -304,7 +261,8 @@ private fun ItemDetailsBody(
             } else {
                 MixRoutineList(
                     mixRoutineList = mixRoutineList,
-                    onMixRoutineClick = { onMixRoutineClick(it.id) })
+                    onMixRoutineClick = { onMixRoutineClick(it.id) },
+                    itemDetailsUiState = itemDetailsUiState)
             }
         }
 
@@ -315,13 +273,20 @@ private fun ItemDetailsBody(
 private fun TimerRoutineList(
     timerRoutineList: List<TimerRoutine>,
     onTimerRoutineClick: (TimerRoutine) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    itemDetailsUiState: ItemDetailsUiState,
 ) {
+    val filteredList = timerRoutineList.filter { timerRoutine ->
+        itemDetailsUiState.itemDetails.name == timerRoutine.deviceId
+    }
 
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = timerRoutineList, key = { it.id }) { timerRoutine ->
-            TimerRoutine(timerRoutine = timerRoutine, onTimerRoutineClick = onTimerRoutineClick)
-            Divider()
+    if(filteredList.isNotEmpty()) {
+        //var routineAlreadyMade: Boolean = true
+        LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(items = timerRoutineList, key = { it.id }) { timerRoutine ->
+                TimerRoutine(timerRoutine = timerRoutine, onTimerRoutineClick = onTimerRoutineClick)
+                Divider()
+            }
         }
     }
 }
@@ -338,7 +303,6 @@ private fun TimerRoutineListHeader(modifier: Modifier = Modifier) {
         }
     }
 }
-
 
 @Composable
 private fun TimerRoutine(
@@ -372,7 +336,6 @@ private val headerList = listOf(
     TimerRoutineHeader(headerStringId = R.string.quantity_in_stock, weight = 1.0f)
 )
 
-//Put buttons in another dialog box
 @Composable
 private fun DeleteConfirmationDialog(
     onDeleteConfirm: () -> Unit,
@@ -402,13 +365,21 @@ private fun DeleteConfirmationDialog(
 private fun ClockRoutineList(
     clockRoutineList: List<ClockRoutine>,
     onClockRoutineClick: (ClockRoutine) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    itemDetailsUiState: ItemDetailsUiState
 ) {
 
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = clockRoutineList, key = { it.id }) { clockRoutine ->
-            ClockRoutine(clockRoutine = clockRoutine, onClockRoutineClick = onClockRoutineClick)
-            Divider()
+    val filteredList = clockRoutineList.filter { clockRoutine ->
+        itemDetailsUiState.itemDetails.name == clockRoutine.deviceId
+    }
+
+    if(filteredList.isNotEmpty()) {
+
+        LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(items = clockRoutineList, key = { it.id }) { clockRoutine ->
+                ClockRoutine(clockRoutine = clockRoutine, onClockRoutineClick = onClockRoutineClick)
+                Divider()
+            }
         }
     }
 }
@@ -431,10 +402,7 @@ private fun ClockRoutine(
             modifier = Modifier.weight(1.5f),
             fontWeight = FontWeight.Bold
         )
-//        Text(
-//            text = clockRoutine.time,
-//            modifier = Modifier.weight(1.0f)
-//        )
+
         Text(text = clockRoutine.status, modifier = Modifier.weight(1.0f))
     }
 }
@@ -443,18 +411,24 @@ private fun ClockRoutine(
 private fun MultiRoutineList(
     multiRoutineList: List<MultiRoutine>,
     onMultiRoutineClick: (MultiRoutine) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    itemDetailsUiState: ItemDetailsUiState
 ) {
 
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = multiRoutineList, key = { it.id }) { multiRoutine ->
-            MultiRoutine(multiRoutine = multiRoutine, onMultiRoutineClick = onMultiRoutineClick)
-            Divider()
+    val filteredList = multiRoutineList.filter { multiRoutine ->
+        itemDetailsUiState.itemDetails.name == multiRoutine.deviceId
+    }
+
+    if(filteredList.isNotEmpty()) {
+
+        LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(items = multiRoutineList, key = { it.id }) { multiRoutine ->
+                MultiRoutine(multiRoutine = multiRoutine, onMultiRoutineClick = onMultiRoutineClick)
+                Divider()
+            }
         }
     }
 }
-
-
 
 @Composable
 private fun MultiRoutine(
@@ -472,10 +446,6 @@ private fun MultiRoutine(
             modifier = Modifier.weight(1.5f),
             fontWeight = FontWeight.Bold
         )
-//        Text(
-//            text = clockRoutine.time,
-//            modifier = Modifier.weight(1.0f)
-//        )
         Text(text = multiRoutine.status, modifier = Modifier.weight(1.0f))
     }
 }
@@ -484,18 +454,24 @@ private fun MultiRoutine(
 private fun MixRoutineList(
     mixRoutineList: List<MixRoutine>,
     onMixRoutineClick: (MixRoutine) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    itemDetailsUiState: ItemDetailsUiState
 ) {
 
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = mixRoutineList, key = { it.id }) { mixRoutine ->
-            MixRoutine(mixRoutine = mixRoutine, onMixRoutineClick = onMixRoutineClick)
-            Divider()
+    val filteredList = mixRoutineList.filter { mixRoutine ->
+        itemDetailsUiState.itemDetails.name == mixRoutine.deviceId
+    }
+
+    if(filteredList.isNotEmpty()) {
+
+        LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(items = mixRoutineList, key = { it.id }) { mixRoutine ->
+                MixRoutine(mixRoutine = mixRoutine, onMixRoutineClick = onMixRoutineClick)
+                Divider()
+            }
         }
     }
 }
-
-
 
 @Composable
 private fun MixRoutine(
@@ -513,11 +489,6 @@ private fun MixRoutine(
             modifier = Modifier.weight(1.5f),
             fontWeight = FontWeight.Bold
         )
-//        Text(
-//            text = clockRoutine.time,
-//            modifier = Modifier.weight(1.0f)
-//        )
         Text(text = mixRoutine.status, modifier = Modifier.weight(1.0f))
     }
 }
-

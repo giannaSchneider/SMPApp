@@ -32,7 +32,7 @@ data class ClockRoutine(
     val id: Int = 0,
     val deviceId: String,
     val name: String,
-    val time: Double,
+    val time: String,
     val status: String
 )
 

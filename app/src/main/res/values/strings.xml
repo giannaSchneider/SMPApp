@@ -34,34 +34,35 @@
     <string name="sell">Sell</string>
     <string name="yes">Yes</string>
     <string name="routine_title">Switch after a time</string>
-    <string name="add_timer_routine">Set a timer to turn device on/off</string>
+    <string name="add_timer_routine">Set A Timer For A Device To Turn On/Off</string>
     <string name="edit_timer_routine_title">Edit Routine</string>
     <string name="timer_routine_name_req">Routine Name*</string>
-    <string name="timer_routine_time_req">Period of time to set Set*</string>
+    <string name="timer_routine_time_req">Period of time to Set*</string>
     <string name="status_req">Device Status*</string>
     <string name="timer_routine_entry_title">Add routine after a period of time</string>
     <string name="timer_routine_details_title">View Timer Routine</string>
     <string name="edit_clock_routine_title">Edit Routine</string>
     <string name="clock_routine_details_title">View Clock Routine</string>
-    <string name="clock_routine_entry_title">Add Clock Routine</string>
-    <string name="add_clock_routine">Set a time to turn on/off</string>
+    <string name="clock_routine_entry_title">Set A Particular Time</string>
+    <string name="add_clock_routine">Set A Particular Time To Turn On/Off</string>
     <string name="clock_routine_name_req">Routine Name *</string>
     <string name="clock_routine_time_req">Time to turn device on/off*</string>
     <string name="edit_multi_routine_title">Edit Routine</string>
     <string name="multi_routine_details_title">View Multi Routine</string>
-    <string name="multi_routine_entry_title">Add Multi Routine</string>
-    <string name="add_multi_routine">Set a condition to turn on/off</string>
+    <string name="multi_routine_entry_title">Set Based On Device Status</string>
+    <string name="add_multi_routine">Set Based On Device Status</string>
     <string name="multi_routine_name_req">Routine Name *</string>
     <string name="multi_routine_time_req">Condition to Set*</string>
     <string name="edit_mix_routine_title">Edit Routine</string>
     <string name="mix_routine_details_title">View Mix Routine</string>
     <string name="mix_routine_entry_title">Add Mix Routine</string>
-    <string name="add_mix_routine">Set a mixed routine</string>
+    <string name="add_mix_routine">Set Up A Series Of Events</string>
     <string name="mix_routine_condition_req">Condition to Set*</string>
     <string name="mix_routine_name_req">Routine Name *</string>
     <string name="mix_routine_time_req">Time to Set*</string>
     <string name="multi_device_name_req">Device Name *</string>
     <string name="add_a_routine">Add a Routine</string>
+    <string name="intermediate_title">Select A Routine To Add</string>
 
 
 

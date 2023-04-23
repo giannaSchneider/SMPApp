@@ -95,8 +95,7 @@ fun MixRoutineDetailsScreen(
         MixRoutineDetailsBody(
 
             mixRoutineDetailsUiState = uiState.value,
-            //onSellMixRoutine = { viewModel.reduceQuantityByOne() },
-            //onAddMixRoutine = {navigateToMixRoutineEntry()},
+
             onDelete = {
                 // Note: If the user rotates the screen very fast, the operation may get cancelled
                 // and the mixRoutine may not be deleted from the Database. This is because when config
@@ -115,10 +114,7 @@ fun MixRoutineDetailsScreen(
 @Composable
 private fun MixRoutineDetailsBody(
     mixRoutineDetailsUiState: MixRoutineDetailsUiState,
-    //itemsRepository: ItemsRepository,
-    //onItemSelected: (Item) -> Unit,
     viewModel: MixRoutineEntryViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    //onAddMixRoutine: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 
@@ -131,23 +127,61 @@ private fun MixRoutineDetailsBody(
     ) {
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
         //MixRoutineInputForm(mixRoutineDetails = mixRoutineDetailsUiState.mixRoutineDetails, enabled = false, itemsRepository = viewModel.itemsRepository, onItemSelected = {})
+
         Text(
-            text = "Routine ID: ${mixRoutineDetailsUiState.mixRoutineDetails.id}",
+            text = "Routine Name: ${mixRoutineDetailsUiState.mixRoutineDetails.name}",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Name: ${mixRoutineDetailsUiState.mixRoutineDetails.name}",
+            text = "Primary Device: ${mixRoutineDetailsUiState.mixRoutineDetails.deviceId}",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Status: ${mixRoutineDetailsUiState.mixRoutineDetails.status}",
+            text = "Primary Device Status: ${mixRoutineDetailsUiState.mixRoutineDetails.status}",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Duration: ${mixRoutineDetailsUiState.mixRoutineDetails.duration}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Time: ${mixRoutineDetailsUiState.mixRoutineDetails.time}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Secondary Device: ${mixRoutineDetailsUiState.mixRoutineDetails.deviceId2}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Secondary Device Status: ${mixRoutineDetailsUiState.mixRoutineDetails.status2}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Duration: ${mixRoutineDetailsUiState.mixRoutineDetails.duration2}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Time: ${mixRoutineDetailsUiState.mixRoutineDetails.time2}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
             modifier = Modifier.fillMaxWidth()

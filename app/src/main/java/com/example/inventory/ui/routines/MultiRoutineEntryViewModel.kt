@@ -21,13 +21,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.inventory.data.Item
+import com.example.inventory.data.ItemsRepository
 import com.example.inventory.data.MultiRoutine
 import com.example.inventory.data.MultiRoutineRepository
 
 /**
  * View Model to validate and insert items in the Room database.
  */
-class MultiRoutineEntryViewModel(private val multiRoutineRepository: MultiRoutineRepository) : ViewModel() {
+class MultiRoutineEntryViewModel(private val multiRoutineRepository: MultiRoutineRepository, val itemsRepository: ItemsRepository) : ViewModel() {
 
     /**
      * Holds current item ui state
@@ -72,11 +73,8 @@ data class MultiRoutineDetails(
     val id: Int = 0,
     val name: String = "",
     val deviceId: String = "",
-    //val time: String = "",
+    val deviceId2: String = "",
     val status: String = "",
-    val id2: Int = 0,
-    val name2: String = "",
-    //val time2: String = "",
     val status2: String = ""
 )
 
@@ -89,12 +87,9 @@ fun MultiRoutineDetails.toMultiRoutine(): MultiRoutine = MultiRoutine(
     id = id,
     name = name,
     deviceId = deviceId,
-    //time = time.toDoubleOrNull() ?: 0.0,
-    status = status,//.toBooleanStrictOrNull()
-    id2 = id2,
-    name2 = name2,
-    //time = time.toDoubleOrNull() ?: 0.0,
-    status2 = status2//.toBooleanStrictOrNull()
+    status = status,
+    deviceId2 = deviceId2,
+    status2 = status2
 )
 
 /**
@@ -110,12 +105,10 @@ fun MultiRoutine.toMultiRoutineUiState(isEntryValid: Boolean = false): MultiRout
  */
 fun MultiRoutine.toMultiRoutineDetails(): MultiRoutineDetails = MultiRoutineDetails(
     id = id,
+    deviceId= deviceId,
     name = name,
-    //time = time.toString(),
     status = status,
-    id2 = id2,
-    name2 = name2,
-    //time = time.toString(),
+    deviceId2= deviceId2,
     status2 = status2
 )
 

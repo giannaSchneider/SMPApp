@@ -26,12 +26,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
+import com.example.inventory.data.Item
+import com.example.inventory.data.ItemsRepository
 import com.example.inventory.ui.AppViewModelProvider
 import com.example.inventory.ui.item.ItemInputForm
 import com.example.inventory.ui.navigation.NavigationDestination
@@ -83,6 +87,7 @@ fun ClockRoutineEntryScreen(
 fun ClockRoutineEntryBody(
     clockRoutineUiState: ClockRoutineUiState,
     onClockRoutineValueChange: (ClockRoutineDetails) -> Unit,
+    viewModel: MixRoutineEntryViewModel = viewModel(factory = AppViewModelProvider.Factory),
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -92,7 +97,7 @@ fun ClockRoutineEntryBody(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        ClockRoutineInputForm(clockRoutineDetails = clockRoutineUiState.clockRoutineDetails, onClockRoutineValueChange = onClockRoutineValueChange)
+        ClockRoutineInputForm(clockRoutineDetails = clockRoutineUiState.clockRoutineDetails, onClockRoutineValueChange = onClockRoutineValueChange, itemsRepository = viewModel.itemsRepository, onItemSelected = {})
         Button(
             onClick = onSaveClick,
             enabled = clockRoutineUiState.isEntryValid,
@@ -109,9 +114,18 @@ fun ClockRoutineInputForm(
     clockRoutineDetails: ClockRoutineDetails,
     modifier: Modifier = Modifier,
     onClockRoutineValueChange: (ClockRoutineDetails) -> Unit = {},
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    itemsRepository: ItemsRepository,
+    onItemSelected: (Item) -> Unit,
 ) {
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(modifier = modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+
+        Text(
+            text = "Name this routine:",
+            fontStyle = FontStyle.Italic,
+            fontSize = 16.sp
+        )
+
         OutlinedTextField(
             value = clockRoutineDetails.name,
             onValueChange = { onClockRoutineValueChange(clockRoutineDetails.copy(name = it)) },
@@ -120,52 +134,50 @@ fun ClockRoutineInputForm(
             enabled = enabled,
             singleLine = true
         )
-//        OutlinedTextField(
-//            value = clockRoutineDetails.time,
-//            onValueChange = { onClockRoutineValueChange(clockRoutineDetails.copy(time = it)) },
-//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-//            label = { Text(stringResource(R.string.clock_routine_time_req)) },
-//            leadingIcon = { Text(Currency.getInstance(Locale.getDefault()).symbol) },
-//            modifier = Modifier.fillMaxWidth(),
-//            enabled = enabled,
-//            singleLine = true
-//        )
-        // Fetching local context
-        val mContext = LocalContext.current
+        Spacer(modifier = Modifier.size(5.dp))
 
-        // Declaring and initializing a calendar
-        val mCalendar = Calendar.getInstance()
-        val mHour = mCalendar[Calendar.HOUR_OF_DAY]
-        val mMinute = mCalendar[Calendar.MINUTE]
+        /////////////////////////////////Device Selection/////////////////////////////////////////////////////
+        var items = itemsRepository.getAllItemsStream().collectAsState(emptyList())
 
-        // Value for storing time as a string
-        val mTime = remember { mutableStateOf("") }
+        var expanded3 by remember { mutableStateOf(false) }
+        var selectedOption3 by remember { mutableStateOf<Item?>(null) }
 
-        val mTimePickerDialog = TimePickerDialog(
-            mContext,
-            { _, mHour: Int, mMinute: Int ->
-                val selectedTime = "$mHour:$mMinute"
-                mTime.value = selectedTime
-                onClockRoutineValueChange(clockRoutineDetails.copy(time = selectedTime)) // Update the time value in your repository
-            }, mHour, mMinute, false
-        )
+        ExposedDropdownMenuBox(
+            expanded = expanded3,
+            onExpandedChange = { expanded3 = !expanded3 }
+        ) {
+            TextField(
+                readOnly = true,
+                value = selectedOption3?.name ?: "",
+                onValueChange = { },
+                label = { Text("Select Device") },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded3)
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
+            )
 
-        /*Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {*/
+            ExposedDropdownMenu(
+                expanded = expanded3,
+                onDismissRequest = { expanded3 = false }
+            ) {
+                items.value.forEach { item ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedOption3 = item
+                            expanded3 = false
+                            onItemSelected(item)
+                            onClockRoutineValueChange(clockRoutineDetails.copy(deviceId = item.name))
+                        }
+                    ) {
+                        Text(text = item.name)
+                    }
+                }
 
-            // On button click, TimePicker is
-            // displayed, user can select a time
-            Button(onClick = { mTimePickerDialog.show() }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58))) {
-                Text(text = "Select a time to turn on/off", color = Color.White)
             }
+        }
 
-            // Add a spacer of 75dp
-            Spacer(modifier = Modifier.size(75.dp))
-
-            // Display selected time
-            Text(text = "Selected Time: ${mTime.value}", fontSize = 14.sp)
-        //}
-
-
+        ////////////////////////END OF DEVICE SELECTION/////////////////
 
         val options = listOf("On", "Off")
         var expanded by remember { mutableStateOf(false) }
@@ -208,6 +220,44 @@ fun ClockRoutineInputForm(
                 }
             }
         }
+
+        //////////////////////////////////////////// END OF STATUS SELECTION////////////////////////////////////////////
+        Spacer(modifier = Modifier.size(10.dp))
+
+        // Fetching local context
+        val mContext = LocalContext.current
+
+        // Declaring and initializing a calendar
+        val mCalendar = Calendar.getInstance()
+        val mHour = mCalendar[Calendar.HOUR_OF_DAY]
+        val mMinute = mCalendar[Calendar.MINUTE]
+
+        // Value for storing time as a string
+        val mTime = remember { mutableStateOf("") }
+
+        val mTimePickerDialog = TimePickerDialog(
+            mContext,
+            { _, mHour: Int, mMinute: Int ->
+                val selectedTime = "$mHour:$mMinute"
+                mTime.value = selectedTime
+                onClockRoutineValueChange(clockRoutineDetails.copy(time = selectedTime)) // Update the time value in your repository
+            }, mHour, mMinute, false
+        )
+
+        /*Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {*/
+
+            // On button click, TimePicker is
+            // displayed, user can select a time
+            Button(onClick = { mTimePickerDialog.show() }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF117A65))) {
+                Text(text = "Select a time to turn on/off", color = Color.White)
+            }
+
+            // Add a spacer of 75dp
+            Spacer(modifier = Modifier.size(25.dp))
+
+            // Display selected time
+            Text(text = "Selected Time: ${mTime.value}", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        //}
 
 
     }

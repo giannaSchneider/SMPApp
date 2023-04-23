@@ -54,7 +54,7 @@ import java.text.NumberFormat
 
 object IntermediateDestination : NavigationDestination {
     override val route = "intermediate"
-    override val titleRes = R.string.item_detail_title
+    override val titleRes = R.string.intermediate_title
     const val itemIdArg = "itemId"
     val routeWithArgs = "$route/{$itemIdArg}"
 }
@@ -68,9 +68,7 @@ fun IntermediateScreen(
     navigateToMixRoutineEntry: () -> Unit,
 
     modifier: Modifier = Modifier,
-   // viewModel: ItemDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-   // val uiState = viewModel.uiState.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
@@ -84,7 +82,6 @@ fun IntermediateScreen(
 
     ) { innerPadding ->
         IntermediateBody(
-            //itemDetailsUiState = uiState.value,
 
             onAddTimerRoutine = {navigateToTimerRoutineEntry()},
             onAddClockRoutine = {navigateToClockRoutineEntry()},
@@ -98,7 +95,6 @@ fun IntermediateScreen(
 
 @Composable
 private fun IntermediateBody(
-   // itemDetailsUiState: ItemDetailsUiState,
 
     onAddTimerRoutine: () -> Unit,
     onAddClockRoutine: () -> Unit,
@@ -107,12 +103,10 @@ private fun IntermediateBody(
 
     modifier: Modifier = Modifier
 ) {
-    // Column(modifier.verticalScroll(rememberScrollState())) {
 
     Column(
         modifier = modifier
             .padding(16.dp),
-        //.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 

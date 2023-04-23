@@ -55,14 +55,6 @@ class TimerRoutineDetailsViewModel(
     /**
      * Reduces the timerRoutine status by one and update the [TimerRoutinesRepository]'s data source.
      */
-    /*fun reduceQuantityByOne() {
-        viewModelScope.launch {
-            val currentTimerRoutine = uiState.value.timerRoutineDetails.toTimerRoutine()
-            if (currentTimerRoutine.status = true) {
-                RoutinesRepository.updateTimerRoutine(currentTimerRoutine.copy(status = currentTimerRoutine.status - 1))
-            }
-        }
-    }*/
 
     /**
      * Deletes the timerRoutine from the [TimerRoutinesRepository]'s data source.

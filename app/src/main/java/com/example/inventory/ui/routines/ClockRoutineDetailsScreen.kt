@@ -140,13 +140,19 @@ private fun ClockRoutineDetailsBody(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
+            text = "Device Name: ${clockRoutineDetailsUiState.clockRoutineDetails.deviceId}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
             text = "Name: ${clockRoutineDetailsUiState.clockRoutineDetails.name}",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Start Time: ${clockRoutineDetailsUiState.clockRoutineDetails.time}",
+            text = "Time: ${clockRoutineDetailsUiState.clockRoutineDetails.time}",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )

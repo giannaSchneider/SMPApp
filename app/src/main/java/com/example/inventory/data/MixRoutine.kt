@@ -33,13 +33,16 @@ data class MixRoutine(
     val id: Int = 0,
     val deviceId: String,
     val name: String,
-    val time: Double,
-    val status: String,
-    val id2: Int = 0,
-    val name2: String,
-    val status2: String,
     val endTime: String,
     val startTime: String,
-    val duration: String
+    val duration: String,
+    val time: String,
+    val status: String,
+    val deviceId2: String,
+    val status2: String,
+    val endTime2: String,
+    val startTime2: String,
+    val duration2: String,
+    val time2: String
 )
 

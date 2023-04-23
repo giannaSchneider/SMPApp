@@ -67,22 +67,9 @@ class MixRoutineEntryViewModel(private val mixRoutineRepository: MixRoutineRepos
         }
     }
 
-//    suspend fun saveMixRoutine() {
-//        if (validateInput()) {
-//            val item1 = Item(name = mixRoutineUiState.mixRoutineDetails.name, status = mixRoutineUiState.mixRoutineDetails.status)
-//            val item2 = Item(name = mixRoutineUiState.mixRoutineDetails.name2, status = mixRoutineUiState.mixRoutineDetails.status2)
-//            itemsRepository.insertItem(item1)
-//            itemsRepository.insertItem(item2)
-//            val mixRoutine = mixRoutineUiState.mixRoutineDetails.toMixRoutine()
-//            mixRoutine.item1Id = item1.id
-//            mixRoutine.item2Id = item2.id
-//            mixRoutineRepository.insertMixRoutine(mixRoutine)
-//        }
-//    }
-
     private fun validateInput(uiState: MixRoutineDetails = mixRoutineUiState.mixRoutineDetails): Boolean {
         return with(uiState) {
-            name.isNotBlank() && /*time.isNotBlank() &&*/ status.isNotBlank()
+            name.isNotBlank()
         }
     }
 }
@@ -101,13 +88,16 @@ data class MixRoutineDetails(
     val name: String = "",
     val time: String = "",
     val status: String = "",
-    val id2: Int = 0,
-    val name2: String = "",
-    //val time2: String = "",
+    val deviceId2: String = "",
     val status2: String = "",
     val endTime: String = "",
     val startTime: String = "",
-    val duration: String = ""
+    val duration: String = "",
+    val endTime2: String = "",
+    val startTime2: String = "",
+    val duration2: String = "",
+    val time2: String = ""
+
 )
 
 /**
@@ -119,15 +109,17 @@ fun MixRoutineDetails.toMixRoutine(): MixRoutine = MixRoutine(
     id = id,
     deviceId = deviceId,
     name = name,
-    time = time.toDoubleOrNull() ?: 0.0,
+    time = time,
     status = status,//.toBooleanStrictOrNull()
-    id2 = id2,
-    name2 = name2,
-    //time = time.toDoubleOrNull() ?: 0.0,
-    status2 = status2,//.toBooleanStrictOrNull()
     endTime = endTime,
     startTime = startTime,
-    duration = duration
+    duration = duration,
+    deviceId2 = deviceId2,
+    time2 = time2,
+    status2 = status2,//.toBooleanStrictOrNull()
+    endTime2 = endTime2,
+    startTime2 = startTime2,
+    duration2 = duration2,
 
 )
 
@@ -145,11 +137,17 @@ fun MixRoutine.toMixRoutineUiState(isEntryValid: Boolean = false): MixRoutineUiS
 fun MixRoutine.toMixRoutineDetails(): MixRoutineDetails = MixRoutineDetails(
     id = id,
     name = name,
-    time = time.toString(),
+    deviceId = deviceId,
+    time = time,
     status = status,
-    id2 = id2,
-    name2 = name2,
-    //time = time.toString(),
-    status2 = status2
+    endTime = endTime,
+    startTime = startTime,
+    duration = duration,
+    deviceId2 = deviceId2,
+    time2 = time,
+    status2 = status2,
+    endTime2 = endTime2,
+    startTime2 = startTime2,
+    duration2 = duration2,
 )
 
