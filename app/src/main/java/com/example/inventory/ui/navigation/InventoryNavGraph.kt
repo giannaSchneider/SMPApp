@@ -27,6 +27,8 @@ import com.example.inventory.ui.home.HomeDestination
 import com.example.inventory.ui.home.HomeScreen
 import com.example.inventory.ui.item.*
 import com.example.inventory.ui.routines.*
+//import com.example.inventory.ui.usage.UsageDetailsDestination
+//import com.example.inventory.ui.usage.UsageScreen
 
 /**
  * Provides Navigation graph for the application.
@@ -261,5 +263,14 @@ fun InventoryNavHost(
                 onNavigateUp = { navController.navigateUp() }
             )
         }
+
+//        composable(
+//            route = UsageDetailsDestination.route
+//        ) {
+//            UsageScreen(
+//                navigateBack = { navController.popBackStack() },
+//                //onNavigateUp = { navController.navigateUp() }
+//            )
+//        }
     }
 }

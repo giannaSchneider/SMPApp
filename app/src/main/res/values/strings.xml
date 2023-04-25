@@ -63,6 +63,7 @@
     <string name="multi_device_name_req">Device Name *</string>
     <string name="add_a_routine">Add a Routine</string>
     <string name="intermediate_title">Select A Routine To Add</string>
+    <string name="usage_title">View Usage</string>
 
 
 

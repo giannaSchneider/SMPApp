@@ -33,6 +33,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -71,6 +73,7 @@ object HomeDestination : NavigationDestination {
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
     navigateToItemUpdate: (Int) -> Unit,
+    //navigateToUsageDetails: () -> Unit,
     modifier: Modifier = Modifier,
     context: Context = LocalContext.current,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -95,11 +98,14 @@ fun HomeScreen(
                     tint = MaterialTheme.colors.onPrimary
                 )
             }
+
+
         },
     ) { innerPadding ->
         HomeBody(
             itemList = homeUiState.itemList,
             onItemClick = navigateToItemUpdate,
+            //onUsageDetails= navigateToUsageDetails,
             onSignOut =  {
                 val intent = Intent(context, SignOutActivity::class.java)
                 context.startActivity(intent)
@@ -114,6 +120,7 @@ fun HomeScreen(
 private fun HomeBody(
     itemList: List<Item>,
     onItemClick: (Int) -> Unit,
+   // onUsageDetails: () -> Unit,
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -130,6 +137,12 @@ private fun HomeBody(
         ) {
             Text("Sign Out")
         }
+//        Button(
+//            onClick =  onUsageDetails,
+//            modifier = Modifier.fillMaxWidth(),
+//        ) {
+//            Text("View Usage Details")
+//        }
         InventoryListHeader()
         Divider()
         if (itemList.isEmpty()) {

@@ -72,7 +72,7 @@ class ClockRoutineEditViewModel(
 
     private fun validateInput(uiState: ClockRoutineDetails = clockRoutineUiState.clockRoutineDetails): Boolean {
         return with(uiState) {
-            name.isNotBlank() && time.isNotBlank() //&& status.isNotBlank()
+            name.isNotBlank() //&& time.isNotBlank() //&& status.isNotBlank()
         }
     }
 }

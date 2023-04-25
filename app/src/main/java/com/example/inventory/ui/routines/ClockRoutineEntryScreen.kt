@@ -17,6 +17,8 @@
 package com.example.inventory.ui.routines
 
 import android.app.TimePickerDialog
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -40,6 +42,11 @@ import com.example.inventory.ui.AppViewModelProvider
 import com.example.inventory.ui.item.ItemInputForm
 import com.example.inventory.ui.navigation.NavigationDestination
 import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 
 object ClockRoutineEntryDestination : NavigationDestination {
@@ -87,7 +94,7 @@ fun ClockRoutineEntryScreen(
 fun ClockRoutineEntryBody(
     clockRoutineUiState: ClockRoutineUiState,
     onClockRoutineValueChange: (ClockRoutineDetails) -> Unit,
-    viewModel: MixRoutineEntryViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: ClockRoutineEntryViewModel = viewModel(factory = AppViewModelProvider.Factory),
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -118,7 +125,10 @@ fun ClockRoutineInputForm(
     itemsRepository: ItemsRepository,
     onItemSelected: (Item) -> Unit,
 ) {
-    Column(modifier = modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(
+        modifier = modifier.fillMaxWidth().padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
 
         Text(
             text = "Name this routine:",
@@ -214,7 +224,7 @@ fun ClockRoutineInputForm(
                             expanded = false
                             onClockRoutineValueChange(clockRoutineDetails.copy(status = selectedOptionText))
                         }
-                    ){
+                    ) {
                         Text(text = selectionOption)
                     }
                 }
@@ -224,43 +234,101 @@ fun ClockRoutineInputForm(
         //////////////////////////////////////////// END OF STATUS SELECTION////////////////////////////////////////////
         Spacer(modifier = Modifier.size(10.dp))
 
+//        var secondsText by remember {
+//            mutableStateOf("")
+//        }
+//        var message by remember {
+//            mutableStateOf("")
+//        }
+//        OutlinedTextField(
+//            value = secondsText,
+//            onValueChange = { secondsText = it },
+//            modifier = Modifier.fillMaxWidth(),
+//            placeholder = {
+//                Text(text = "Trigger alarm in seconds")
+//            }
+//        )
+//        OutlinedTextField(
+//            value = message,
+//            onValueChange = { message = it },
+//            modifier = Modifier.fillMaxWidth(),
+//            placeholder = {
+//                Text(text = "Message")
+//            }
+//        )
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.Center
+//        ) {
+//            Button(onClick = {
+//                alarmItem = AlarmItem(
+//                    time = LocalDateTime.now()
+//                        .plusSeconds(secondsText.toLong()),
+//                    message = message
+//                )
+//                alarmItem?.let(scheduler::schedule)
+//                secondsText = ""
+//                message = ""
+//            }) {
+//                Text(text = "Schedule")
+//            }
+//            Button(onClick = {
+//                alarmItem?.let(scheduler::cancel)
+//            }) {
+//                Text(text = "Cancel")
+//            }
+
+
+
         // Fetching local context
         val mContext = LocalContext.current
 
-        // Declaring and initializing a calendar
+// Declaring and initializing a calendar
         val mCalendar = Calendar.getInstance()
-        val mHour = mCalendar[Calendar.HOUR_OF_DAY]
-        val mMinute = mCalendar[Calendar.MINUTE]
+        val mEndHour = mCalendar[Calendar.HOUR_OF_DAY]
+        val mEndMinute = mCalendar[Calendar.MINUTE]
 
-        // Value for storing time as a string
-        val mTime = remember { mutableStateOf("") }
+// Creating mutable states to hold the selected times
+
+        val mStartTime = LocalTime.now()
+        val mEndTime = remember { mutableStateOf("") }
+
 
         val mTimePickerDialog = TimePickerDialog(
             mContext,
             { _, mHour: Int, mMinute: Int ->
                 val selectedTime = "$mHour:$mMinute"
-                mTime.value = selectedTime
-                onClockRoutineValueChange(clockRoutineDetails.copy(time = selectedTime)) // Update the time value in your repository
-            }, mHour, mMinute, false
+                mEndTime.value = selectedTime
+                //onClockRoutineValueChange(clockRoutineDetails.copy(time = selectedTime)) // Update the time value in your repository
+            }, mEndHour, mEndMinute, false
         )
+        Button(onClick = { mTimePickerDialog.show() }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF117A65))) {
+            Text(text = "Select a time to turn on/off", color = Color.White)
+        }
 
-        /*Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {*/
+        Spacer(modifier = Modifier.size(20.dp))
 
-            // On button click, TimePicker is
-            // displayed, user can select a time
-            Button(onClick = { mTimePickerDialog.show() }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF117A65))) {
-                Text(text = "Select a time to turn on/off", color = Color.White)
-            }
+        // Display selected start and end times
+        Text(text = "Selected End Time: ${mEndTime.value}", fontWeight = FontWeight.Bold, fontSize = 18.sp)
 
-            // Add a spacer of 75dp
-            Spacer(modifier = Modifier.size(25.dp))
+            fun calculateDuration(mStartTime: LocalTime, endTime: String): Long {
+                return try {
+                        val end = LocalTime.parse(endTime, DateTimeFormatter.ofPattern("HH:mm"))
+                        val duration = Duration.between(mStartTime, end)
+                        duration.toSeconds()
+//                    val hours = duration.toHours()
+//                    val minutes = duration.toMinutes() % 60
+//                    String.format("%d hours %d minutes", hours, minutes)
+                } catch (e: DateTimeParseException) {
+                    -1
+                }
+        }
+        val duration = calculateDuration(mStartTime, mEndTime.value)
+//        val durationInSeconds = duration.toSec
+        onClockRoutineValueChange(clockRoutineDetails.copy(duration = duration))
 
-            // Display selected time
-            Text(text = "Selected Time: ${mTime.value}", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-        //}
-
-
+        }
     }
-}
+//}
 
 

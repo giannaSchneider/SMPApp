@@ -18,6 +18,8 @@ package com.example.inventory.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.Duration
+import java.time.LocalDateTime
 
 /**
  * Entity data class represents a single row in the database.
@@ -32,7 +34,7 @@ data class ClockRoutine(
     val id: Int = 0,
     val deviceId: String,
     val name: String,
-    val time: String,
+    val duration: String,
     val status: String
 )
 

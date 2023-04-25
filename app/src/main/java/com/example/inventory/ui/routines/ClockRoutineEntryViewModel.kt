@@ -24,6 +24,8 @@ import com.example.inventory.data.Item
 import com.example.inventory.data.ClockRoutine
 import com.example.inventory.data.ClockRoutineRepository
 import com.example.inventory.data.ItemsRepository
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 /**
  * View Model to validate and insert items in the Room database.
@@ -73,7 +75,7 @@ data class ClockRoutineDetails(
     val id: Int = 0,
     val deviceId: String = "",
     val name: String = "",
-    val time: String = "",
+    val duration: Long = 0,
     val status: String = ""
 )
 
@@ -86,7 +88,7 @@ fun ClockRoutineDetails.toClockRoutine(): ClockRoutine = ClockRoutine(
     id = id,
     deviceId = deviceId,
     name = name,
-    time = time,//.toDoubleOrNull() ?: 0.0,
+    duration = duration.toString(),//.toDoubleOrNull() ?: 0.0,
     status = status//.toBooleanStrictOrNull()
 )
 
@@ -105,7 +107,7 @@ fun ClockRoutine.toClockRoutineDetails(): ClockRoutineDetails = ClockRoutineDeta
     id = id,
     deviceId = deviceId,
     name = name,
-    time = time,//.toString(),
+    duration = duration.toLong(),
     status = status
 )
 

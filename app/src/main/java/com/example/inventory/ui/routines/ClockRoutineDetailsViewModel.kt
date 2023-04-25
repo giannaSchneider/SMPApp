@@ -45,24 +45,12 @@ class ClockRoutineDetailsViewModel(
         ClockRoutineRepository.getClockRoutineStream(clockRoutineId)
             .filterNotNull()
             .map {
-                ClockRoutineDetailsUiState(/*outOfStock = it.status = true,*/ clockRoutineDetails = it.toClockRoutineDetails())
+                ClockRoutineDetailsUiState(clockRoutineDetails = it.toClockRoutineDetails())
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = ClockRoutineDetailsUiState()
             )
-
-    /**
-     * Reduces the clockRoutine status by one and update the [ClockRoutinesRepository]'s data source.
-     */
-    /*fun reduceQuantityByOne() {
-        viewModelScope.launch {
-            val currentClockRoutine = uiState.value.clockRoutineDetails.toClockRoutine()
-            if (currentClockRoutine.status = true) {
-                RoutinesRepository.updateClockRoutine(currentClockRoutine.copy(status = currentClockRoutine.status - 1))
-            }
-        }
-    }*/
 
     /**
      * Deletes the clockRoutine from the [ClockRoutinesRepository]'s data source.

@@ -232,7 +232,7 @@ fun TimerRoutineInputForm(
         }
 
       //  Spacer(modifier = Modifier.size(10.dp))
-
+/*
 
 // Fetching local context
         val mContext = LocalContext.current
@@ -314,6 +314,14 @@ fun TimerRoutineInputForm(
             }
             val duration = calculateDuration(mStartTime.value, mEndTime.value)
         onTimerRoutineValueChange(timerRoutineDetails.copy(duration = duration))
-
+*/
+        OutlinedTextField(
+            value = timerRoutineDetails.duration,
+            onValueChange = { onTimerRoutineValueChange(timerRoutineDetails.copy(duration = it)) },
+            label = { Text("Duration in seconds") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
     }
 }
