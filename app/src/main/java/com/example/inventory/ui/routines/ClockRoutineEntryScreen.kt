@@ -315,7 +315,7 @@ fun ClockRoutineInputForm(
                 return try {
                         val end = LocalTime.parse(endTime, DateTimeFormatter.ofPattern("HH:mm"))
                         val duration = Duration.between(mStartTime, end)
-                        duration.toSeconds()
+                        duration.toMillis() / 1000
 //                    val hours = duration.toHours()
 //                    val minutes = duration.toMinutes() % 60
 //                    String.format("%d hours %d minutes", hours, minutes)
