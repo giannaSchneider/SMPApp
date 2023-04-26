@@ -92,10 +92,10 @@ data class MixRoutineDetails(
     val status2: String = "",
     val endTime: String = "",
     val startTime: String = "",
-    val duration: String = "",
+    val duration: Long = 0,
     val endTime2: String = "",
     val startTime2: String = "",
-    val duration2: String = "",
+    val duration2: Long = 0,
     val time2: String = ""
 
 )
@@ -113,13 +113,13 @@ fun MixRoutineDetails.toMixRoutine(): MixRoutine = MixRoutine(
     status = status,//.toBooleanStrictOrNull()
     endTime = endTime,
     startTime = startTime,
-    duration = duration,
+    duration = duration.toString(),
     deviceId2 = deviceId2,
     time2 = time2,
     status2 = status2,//.toBooleanStrictOrNull()
     endTime2 = endTime2,
     startTime2 = startTime2,
-    duration2 = duration2,
+    duration2 = duration2.toString(),
 
 )
 
@@ -142,12 +142,12 @@ fun MixRoutine.toMixRoutineDetails(): MixRoutineDetails = MixRoutineDetails(
     status = status,
     endTime = endTime,
     startTime = startTime,
-    duration = duration,
+    duration = duration.toLong(),
     deviceId2 = deviceId2,
     time2 = time,
     status2 = status2,
     endTime2 = endTime2,
     startTime2 = startTime2,
-    duration2 = duration2,
+    duration2 = duration2.toLong(),
 )
 

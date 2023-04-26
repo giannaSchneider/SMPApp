@@ -152,6 +152,12 @@ private fun MultiRoutineDetailsBody(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
+            text = "Is Set To: ${multiRoutineDetailsUiState.multiRoutineDetails.status}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
             text = "Then Turn Secondary Device: ${multiRoutineDetailsUiState.multiRoutineDetails.name}",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
