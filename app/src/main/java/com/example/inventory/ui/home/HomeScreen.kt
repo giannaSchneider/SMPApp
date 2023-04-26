@@ -73,7 +73,7 @@ object HomeDestination : NavigationDestination {
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
     navigateToItemUpdate: (Int) -> Unit,
-    //navigateToUsageDetails: () -> Unit,
+    navigateToUsageDetails: () -> Unit,
     modifier: Modifier = Modifier,
     context: Context = LocalContext.current,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)

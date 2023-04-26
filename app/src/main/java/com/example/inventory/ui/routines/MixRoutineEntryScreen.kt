@@ -505,16 +505,14 @@ fun MixRoutineInputForm(
             Text(text = "Selected End Time: ${mEndTime2.value}", fontWeight = FontWeight.Bold, fontSize = 18.sp)
 
             fun calculateDuration(mStartTime2: LocalTime, endTime2: String): Long {
-                return try {
+
                     val end2 = LocalTime.parse(endTime2, DateTimeFormatter.ofPattern("HH:mm"))
                     val duration = Duration.between(mStartTime2, end2)
-                    duration.toMillis() / 1000
+                    return duration.toMillis() / 1000
 //                    val hours = duration.toHours()
 //                    val minutes = duration.toMinutes() % 60
 //                    String.format("%d hours %d minutes", hours, minutes)
-                } catch (e: DateTimeParseException) {
-                    -1
-                }
+                
             }
             val duration2 = calculateDuration(mStartTime2, mEndTime2.value)
 //        val durationInSeconds = duration.toSec

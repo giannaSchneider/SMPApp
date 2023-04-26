@@ -27,6 +27,9 @@ import com.example.inventory.ui.home.HomeDestination
 import com.example.inventory.ui.home.HomeScreen
 import com.example.inventory.ui.item.*
 import com.example.inventory.ui.routines.*
+import com.example.inventory.ui.usage.UsageDetailsDestination
+import com.example.inventory.ui.usage.UsageScreen
+
 //import com.example.inventory.ui.usage.UsageDetailsDestination
 //import com.example.inventory.ui.usage.UsageScreen
 
@@ -48,7 +51,8 @@ fun InventoryNavHost(
                 navigateToItemEntry = { navController.navigate(ItemEntryDestination.route) },
                 navigateToItemUpdate = {
                     navController.navigate("${ItemDetailsDestination.route}/${it}")
-                }
+                },
+                navigateToUsageDetails = { navController.navigate(UsageDetailsDestination.route) }
             )
         }
         composable(route = ItemEntryDestination.route) {
@@ -264,13 +268,13 @@ fun InventoryNavHost(
             )
         }
 
-//        composable(
-//            route = UsageDetailsDestination.route
-//        ) {
-//            UsageScreen(
-//                navigateBack = { navController.popBackStack() },
-//                //onNavigateUp = { navController.navigateUp() }
-//            )
-//        }
+        composable(
+            route = UsageDetailsDestination.route
+        ) {
+            UsageScreen(
+                navigateBack = { navController.popBackStack() },
+                //onNavigateUp = { navController.navigateUp() }
+            )
+        }
     }
 }
